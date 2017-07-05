@@ -6,6 +6,7 @@ using Owin;
 using System.Configuration;
 using System.Threading.Tasks;
 using HomeInWebAPI.Models;
+using System.Security.Claims;
 
 namespace HomeInWebAPI.App_Start
 {
@@ -42,23 +43,29 @@ namespace HomeInWebAPI.App_Start
                     //AppSecret = ConfigurationManager.AppSettings.Get("FacebookAppSecret"),
                     AppId = "1734115113548184",
                     AppSecret = "b9bfbe8f4d42bc44cc5450f74c25e6f9",
-                    Scope = { "email" },
+                    Scope = { "email", "public_profile", "user_friends" },
                     Fields = { "name", "email", "gender", "friends" },
                     Provider = new FacebookAuthenticationProvider
                     {
                         OnAuthenticated = (context) =>
                         {
-                            context.Identity.AddClaim(new System.Security.Claims.Claim("urn:facebook:access_token", context.AccessToken, XmlSchemaString, "Facebook"));
-                            foreach (var x in context.User)
-                            {
-                                var claimType1 = string.Format("urn:facebook:{0}", x.Key);
-                                string claimValue = x.Value.ToString();
-                                if (!context.Identity.HasClaim(claimType1, claimValue))
-                                    context.Identity.AddClaim(new System.Security.Claims.Claim(claimType1, claimValue, XmlSchemaString, "Facebook"));
+                            //context.Identity.AddClaim(new System.Security.Claims.Claim("urn:facebook:access_token", context.AccessToken, XmlSchemaString, "Facebook"));
+                            //foreach (var x in context.User)
+                            //{
+                            //    var claimType1 = string.Format("urn:facebook:{0}", x.Key);
+                            //    string claimValue = x.Value.ToString();
+                            //    if (!context.Identity.HasClaim(claimType1, claimValue))
+                            //        context.Identity.AddClaim(new System.Security.Claims.Claim(claimType1, claimValue, XmlSchemaString, "Facebook"));
 
+                            //}
+
+                            foreach (var x in context.User) { 
+
+                                context.Identity.AddClaim(new Claim(x.Key, x.Value.ToString()));
                             }
 
-                            return Task.FromResult(0);
+                            //return Task.FromResult(0);
+                            return Task.FromResult(context);
                         }
                     }
                 };

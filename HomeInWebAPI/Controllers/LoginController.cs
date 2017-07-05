@@ -4,7 +4,7 @@ using HomeInWebAPI.Common;
 namespace Controllers
 {
     [RoutePrefix("api/login")]
-    public class LoginController : BaseController
+    public class LoginController : ApiController
     {
         [Route("exlogin")]
         [HttpGet]
