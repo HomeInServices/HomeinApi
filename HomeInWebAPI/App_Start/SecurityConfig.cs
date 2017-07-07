@@ -59,11 +59,11 @@ namespace HomeInWebAPI.App_Start
 
                             //}
 
-                            foreach (var x in context.User) { 
+                            foreach (var x in context.User) {
 
                                 context.Identity.AddClaim(new Claim(x.Key, x.Value.ToString()));
                             }
-
+                            context.Identity.AddClaim(new Claim("access_token", context.AccessToken.ToString()));
                             //return Task.FromResult(0);
                             return Task.FromResult(context);
                         }
