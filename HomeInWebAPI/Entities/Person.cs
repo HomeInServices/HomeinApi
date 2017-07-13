@@ -17,45 +17,69 @@ namespace HomeInWebAPI.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
         {
+            this.Addresses = new HashSet<Address>();
             this.AddressInformations = new HashSet<AddressInformation>();
+            this.Comments = new HashSet<Comment>();
+            this.Comments1 = new HashSet<Comment>();
+            this.Employers = new HashSet<Employer>();
+            this.Employers1 = new HashSet<Employer>();
+            this.LastHiredBies = new HashSet<LastHiredBy>();
             this.PaymentProfiles = new HashSet<PaymentProfile>();
-            this.Reviews = new HashSet<Review>();
-            this.Reviews1 = new HashSet<Review>();
+            this.WorkerExperiences = new HashSet<WorkerExperience>();
+            this.Ratings = new HashSet<Rating>();
+            this.Ratings1 = new HashSet<Rating>();
             this.PersonRoles = new HashSet<PersonRole>();
-            this.Schedulings = new HashSet<Scheduling>();
-            this.Schedulings1 = new HashSet<Scheduling>();
-            this.SkillsWorkers = new HashSet<SkillsWorker>();
+            this.WorkerSchedules = new HashSet<WorkerSchedule>();
+            this.WorkerSchedules1 = new HashSet<WorkerSchedule>();
+            this.WorkerSkills = new HashSet<WorkerSkill>();
             this.Transactions = new HashSet<Transaction>();
             this.Transactions1 = new HashSet<Transaction>();
+            this.WorkerAvailabilities = new HashSet<WorkerAvailability>();
         }
     
         public int id { get; set; }
         public string facebook_id { get; set; }
-        public string first { get; set; }
-        public string middle { get; set; }
-        public string last { get; set; }
-        public int address_id { get; set; }
+        public string name { get; set; }
+        public string email { get; set; }
+        public string picture { get; set; }
         public string phone { get; set; }
+        public string gender { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Address> Addresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AddressInformation> AddressInformations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> Comments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> Comments1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employer> Employers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employer> Employers1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LastHiredBy> LastHiredBies { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaymentProfile> PaymentProfiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<WorkerExperience> WorkerExperiences { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Review> Reviews1 { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rating> Ratings1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonRole> PersonRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Scheduling> Schedulings { get; set; }
+        public virtual ICollection<WorkerSchedule> WorkerSchedules { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Scheduling> Schedulings1 { get; set; }
+        public virtual ICollection<WorkerSchedule> WorkerSchedules1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SkillsWorker> SkillsWorkers { get; set; }
+        public virtual ICollection<WorkerSkill> WorkerSkills { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Transaction> Transactions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Transaction> Transactions1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkerAvailability> WorkerAvailabilities { get; set; }
     }
 }

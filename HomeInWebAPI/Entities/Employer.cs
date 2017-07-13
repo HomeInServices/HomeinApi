@@ -12,18 +12,13 @@ namespace HomeInWebAPI.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Address
+    public partial class Employer
     {
         public int id { get; set; }
-        public int person_id { get; set; }
-        public int type_id { get; set; }
-        public string street { get; set; }
-        public string city { get; set; }
-        public string state { get; set; }
-        public string zipcode { get; set; }
-        public string country { get; set; }
+        public int worker_id { get; set; }
+        public int user_id { get; set; }
     
-        public virtual AddressType AddressType { get; set; }
         public virtual Person Person { get; set; }
+        public virtual Person Person1 { get; set; }
     }
 }

@@ -28,14 +28,19 @@ namespace HomeInWebAPI.Entities
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressInformation> AddressInformations { get; set; }
         public virtual DbSet<AddressType> AddressTypes { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Employer> Employers { get; set; }
+        public virtual DbSet<LastHiredBy> LastHiredBies { get; set; }
         public virtual DbSet<PaymentProfile> PaymentProfiles { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonRole> PersonRoles { get; set; }
-        public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Scheduling> Schedulings { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
-        public virtual DbSet<SkillsWorker> SkillsWorkers { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<WorkerAvailability> WorkerAvailabilities { get; set; }
+        public virtual DbSet<WorkerExperience> WorkerExperiences { get; set; }
+        public virtual DbSet<WorkerSchedule> WorkerSchedules { get; set; }
+        public virtual DbSet<WorkerSkill> WorkerSkills { get; set; }
     }
 }

@@ -209,7 +209,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
-    <Compile Include="Controllers\SchedulingsController.cs" />
     <Compile Include="Entities\Address.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
@@ -217,6 +216,12 @@
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\AddressType.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Comment.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Employer.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Extend\Address.cs" />
@@ -246,6 +251,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HomeIn.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\LastHiredBy.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\PaymentProfile.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
@@ -255,29 +263,38 @@
     <Compile Include="Entities\PersonRole.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Review.cs">
+    <Compile Include="Entities\Rating.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Role.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Scheduling.cs">
-      <DependentUpon>HomeIn.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\Skill.cs">
-      <DependentUpon>HomeIn.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SkillsWorker.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Transaction.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\WorkerAvailability.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\WorkerExperience.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\WorkerSchedule.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\WorkerSkill.cs">
+      <DependentUpon>HomeIn.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PersonModel.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\FacebookProvider.cs" />
+    <Compile Include="Services\FacebookHttpConnect.cs" />
+    <Compile Include="Services\FacebookService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\WorkerService.cs" />
     <Compile Include="Startup.cs" />

@@ -12,13 +12,13 @@ namespace HomeInWebAPI.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Review
+    public partial class Comment
     {
         public int id { get; set; }
         public int user_id { get; set; }
         public int worker_id { get; set; }
-        public string comment { get; set; }
-        public double rating { get; set; }
+        public string comment1 { get; set; }
+        public System.DateTime commentedOn { get; set; }
     
         public virtual Person Person { get; set; }
         public virtual Person Person1 { get; set; }

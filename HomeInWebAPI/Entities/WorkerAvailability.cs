@@ -12,13 +12,13 @@ namespace HomeInWebAPI.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class SkillsWorker
+    public partial class WorkerAvailability
     {
         public int id { get; set; }
-        public int skill_id { get; set; }
-        public int person_id { get; set; }
+        public int worker_Id { get; set; }
+        public Nullable<int> MilesWantToDrive { get; set; }
+        public string DaysAvailable { get; set; }
     
         public virtual Person Person { get; set; }
-        public virtual Skill Skill { get; set; }
     }
 }

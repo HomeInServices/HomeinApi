@@ -12,7 +12,7 @@ namespace HomeInWebAPI.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Scheduling
+    public partial class WorkerSchedule
     {
         public int id { get; set; }
         public System.DateTime startdate { get; set; }

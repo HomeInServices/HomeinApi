@@ -4,32 +4,46 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="21cb4192a69d4fe9ae36bd0072de69c3" Name="Diagram1">
-        <EntityTypeShape EntityType="HomeInModel.Address" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.AddressInformation" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.AddressType" Width="1.5" PointX="5.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.PaymentProfile" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Person" Width="1.5" PointX="0.75" PointY="10" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.PersonRole" Width="1.5" PointX="6" PointY="11.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Review" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Role" Width="1.5" PointX="3.75" PointY="26.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Scheduling" Width="1.5" PointX="3" PointY="16.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Skill" Width="1.5" PointX="3.75" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.SkillsWorker" Width="1.5" PointX="6" PointY="8.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="HomeInModel.Transaction" Width="1.5" PointX="3" PointY="22.25" IsExpanded="true" />
-        <AssociationConnector Association="HomeInModel.FK_Address_AddressType" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_AddressInfo_person" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_PaymentProfile_id" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Review_user" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Review_worker" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Roles_person" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Scheduling_User" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Scheduling_worker" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_SkillsWorker_Worker" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Transaction_user" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_Transaction_worker" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_PersonRole_Role" ManuallyRouted="false" />
-        <AssociationConnector Association="HomeInModel.FK_SkillsWorker_Skills" ManuallyRouted="false" />
+      <Diagram DiagramId="21cb4192a69d4fe9ae36bd0072de69c3" Name="Diagram1" ZoomLevel="54">
+        <EntityTypeShape EntityType="HomeInModel.Address" Width="1.5" PointX="6" PointY="20.875" />
+        <EntityTypeShape EntityType="HomeInModel.AddressInformation" Width="1.5" PointX="3" PointY="22" />
+        <EntityTypeShape EntityType="HomeInModel.AddressType" Width="1.5" PointX="3.75" PointY="31.5" />
+        <EntityTypeShape EntityType="HomeInModel.Comment" Width="1.5" PointX="3" PointY="37" />
+        <EntityTypeShape EntityType="HomeInModel.Employer" Width="1.5" PointX="3" PointY="12.75" />
+        <EntityTypeShape EntityType="HomeInModel.LastHiredBy" Width="1.5" PointX="3" PointY="46.25" />
+        <EntityTypeShape EntityType="HomeInModel.PaymentProfile" Width="1.5" PointX="3" PointY="28.625" />
+        <EntityTypeShape EntityType="HomeInModel.Person" Width="1.5" PointX="0.75" PointY="19.5" />
+        <EntityTypeShape EntityType="HomeInModel.PersonRole" Width="1.5" PointX="3" PointY="18.375" />
+        <EntityTypeShape EntityType="HomeInModel.Rating" Width="1.5" PointX="6" PointY="17" />
+        <EntityTypeShape EntityType="HomeInModel.Role" Width="1.5" PointX="0.75" PointY="16.5" />
+        <EntityTypeShape EntityType="HomeInModel.Skill" Width="1.5" PointX="3.75" PointY="6.25" />
+        <EntityTypeShape EntityType="HomeInModel.Transaction" Width="1.5" PointX="3" PointY="9.25" />
+        <EntityTypeShape EntityType="HomeInModel.WorkerAvailability" Width="1.5" PointX="3" PointY="40.125" />
+        <EntityTypeShape EntityType="HomeInModel.WorkerExperience" Width="1.5" PointX="3" PointY="15.375" />
+        <EntityTypeShape EntityType="HomeInModel.WorkerSchedule" Width="1.5" PointX="3" PointY="42.875" />
+        <EntityTypeShape EntityType="HomeInModel.WorkerSkill" Width="1.5" PointX="3" PointY="25.25" />
+        <AssociationConnector Association="HomeInModel.FK_Address_AddressType" />
+        <AssociationConnector Association="HomeInModel.FK_Address_Person" />
+        <AssociationConnector Association="HomeInModel.FK_AddressInfo_person" />
+        <AssociationConnector Association="HomeInModel.FK_Comments_User" />
+        <AssociationConnector Association="HomeInModel.FK_Comments_Worker" />
+        <AssociationConnector Association="HomeInModel.FK_Employer_User" />
+        <AssociationConnector Association="HomeInModel.FK_Employer_Worker" />
+        <AssociationConnector Association="HomeInModel.FK_LastHiredBy_Worker" />
+        <AssociationConnector Association="HomeInModel.FK_PaymentProfile_id" />
+        <AssociationConnector Association="HomeInModel.FK_Person_WorkerExperience" />
+        <AssociationConnector Association="HomeInModel.FK_Rating_User" />
+        <AssociationConnector Association="HomeInModel.FK_Rating_worker" />
+        <AssociationConnector Association="HomeInModel.FK_Roles_person" />
+        <AssociationConnector Association="HomeInModel.FK_Scheduling_User" />
+        <AssociationConnector Association="HomeInModel.FK_Scheduling_worker" />
+        <AssociationConnector Association="HomeInModel.FK_SkillsWorker_Worker" />
+        <AssociationConnector Association="HomeInModel.FK_Transaction_user" />
+        <AssociationConnector Association="HomeInModel.FK_Transaction_worker" />
+        <AssociationConnector Association="HomeInModel.FK_WorkerAvailability_Person" />
+        <AssociationConnector Association="HomeInModel.FK_PersonRole_Role" />
+        <AssociationConnector Association="HomeInModel.FK_Rating_Skills" />
+        <AssociationConnector Association="HomeInModel.FK_SkillsWorker_Skills" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

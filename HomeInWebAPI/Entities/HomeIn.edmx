@@ -4,12 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HomeInModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HomeInModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="person_id" Type="int" Nullable="false" />
           <Property Name="type_id" Type="int" Nullable="false" />
           <Property Name="street" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="city" Type="varchar" MaxLength="15" Nullable="false" />
@@ -36,6 +37,34 @@
           <Property Name="name" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="worker_id" Type="int" Nullable="false" />
+          <Property Name="comment" Type="varchar" MaxLength="300" />
+          <Property Name="commentedOn" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="worker_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LastHiredBy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="worker_Id" Type="int" Nullable="false" />
+          <Property Name="user_name" Type="varchar" MaxLength="200" />
+          <Property Name="user_email" Type="varchar" MaxLength="350" />
+          <Property Name="user_phone" Type="numeric" Precision="11" Scale="0" />
+        </EntityType>
         <EntityType Name="PaymentProfile">
           <Key>
             <PropertyRef Name="id" />
@@ -51,11 +80,11 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="facebook_id" Type="varchar" MaxLength="25" />
-          <Property Name="first" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="middle" Type="varchar" MaxLength="50" />
-          <Property Name="last" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="address_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar(max)" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="350" />
+          <Property Name="picture" Type="varchar(max)" />
           <Property Name="phone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="gender" Type="varchar" MaxLength="6" />
         </EntityType>
         <EntityType Name="PersonRole">
           <Key>
@@ -65,15 +94,16 @@
           <Property Name="role_id" Type="int" Nullable="false" />
           <Property Name="person_id" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Review">
+        <EntityType Name="Rating">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
           <Property Name="worker_id" Type="int" Nullable="false" />
-          <Property Name="comment" Type="varchar" MaxLength="300" />
-          <Property Name="rating" Type="float" Nullable="false" />
+          <Property Name="skill_id" Type="int" Nullable="false" />
+          <Property Name="rating" Type="int" Nullable="false" />
+          <Property Name="ratedOn" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -83,17 +113,6 @@
           <Property Name="name" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="150" />
         </EntityType>
-        <EntityType Name="Scheduling">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="startdate" Type="datetime" Nullable="false" />
-          <Property Name="enddate" Type="datetime" Nullable="false" />
-          <Property Name="description" Type="varchar" MaxLength="150" />
-          <Property Name="worker_id" Type="int" Nullable="false" />
-          <Property Name="user_id" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="Skills">
           <Key>
             <PropertyRef Name="id" />
@@ -102,14 +121,6 @@
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="150" />
           <Property Name="equipment" Type="varchar" MaxLength="150" />
-        </EntityType>
-        <EntityType Name="SkillsWorker">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="skill_id" Type="int" Nullable="false" />
-          <Property Name="person_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
@@ -123,6 +134,45 @@
           <Property Name="worker_id" Type="int" Nullable="false" />
           <Property Name="discount" Type="float" />
         </EntityType>
+        <EntityType Name="WorkerAvailability">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="worker_Id" Type="int" Nullable="false" />
+          <Property Name="MilesWantToDrive" Type="int" />
+          <Property Name="DaysAvailable" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WorkerExperience">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Years" Type="float" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" />
+          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="HoursWorked" Type="float" />
+        </EntityType>
+        <EntityType Name="WorkerSchedule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="startdate" Type="datetime" Nullable="false" />
+          <Property Name="enddate" Type="datetime" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="150" />
+          <Property Name="worker_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkerSkills">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="skill_id" Type="int" Nullable="false" />
+          <Property Name="person_id" Type="int" Nullable="false" />
+          <Property Name="averageRating" Type="int" />
+        </EntityType>
         <Association Name="FK_Address_AddressType">
           <End Role="AddressType" Type="Self.AddressType" Multiplicity="1" />
           <End Role="Address" Type="Self.Address" Multiplicity="*" />
@@ -132,6 +182,18 @@
             </Principal>
             <Dependent Role="Address">
               <PropertyRef Name="type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Address_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Address" Type="Self.Address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="person_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -147,6 +209,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Comments_User">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_Worker">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employer_User">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Employer" Type="Self.Employer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employer">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employer_Worker">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Employer" Type="Self.Employer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employer">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LastHiredBy_Worker">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="LastHiredBy" Type="Self.LastHiredBy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="LastHiredBy">
+              <PropertyRef Name="worker_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PaymentProfile_id">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="PaymentProfile" Type="Self.PaymentProfile" Multiplicity="*" />
@@ -156,6 +278,18 @@
             </Principal>
             <Dependent Role="PaymentProfile">
               <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Person_WorkerExperience">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="WorkerExperience" Type="Self.WorkerExperience" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="WorkerExperience">
+              <PropertyRef Name="PersonId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -171,26 +305,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Review_user">
+        <Association Name="FK_Rating_Skills">
+          <End Role="Skills" Type="Self.Skills" Multiplicity="1" />
+          <End Role="Rating" Type="Self.Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Skills">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="skill_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rating_User">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <End Role="Rating" Type="Self.Rating" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Review">
+            <Dependent Role="Rating">
               <PropertyRef Name="user_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Review_worker">
+        <Association Name="FK_Rating_worker">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <End Role="Rating" Type="Self.Rating" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Review">
+            <Dependent Role="Rating">
               <PropertyRef Name="worker_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -209,48 +355,48 @@
         </Association>
         <Association Name="FK_Scheduling_User">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <End Role="WorkerSchedule" Type="Self.WorkerSchedule" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Scheduling">
+            <Dependent Role="WorkerSchedule">
               <PropertyRef Name="user_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Scheduling_worker">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <End Role="WorkerSchedule" Type="Self.WorkerSchedule" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Scheduling">
+            <Dependent Role="WorkerSchedule">
               <PropertyRef Name="worker_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SkillsWorker_Skills">
           <End Role="Skills" Type="Self.Skills" Multiplicity="1" />
-          <End Role="SkillsWorker" Type="Self.SkillsWorker" Multiplicity="*" />
+          <End Role="WorkerSkills" Type="Self.WorkerSkills" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Skills">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="SkillsWorker">
+            <Dependent Role="WorkerSkills">
               <PropertyRef Name="skill_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SkillsWorker_Worker">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="SkillsWorker" Type="Self.SkillsWorker" Multiplicity="*" />
+          <End Role="WorkerSkills" Type="Self.WorkerSkills" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="SkillsWorker">
+            <Dependent Role="WorkerSkills">
               <PropertyRef Name="person_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -279,42 +425,91 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkerAvailability_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="WorkerAvailability" Type="Self.WorkerAvailability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="WorkerAvailability">
+              <PropertyRef Name="worker_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="HomeInModelStoreContainer">
           <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressInformation" EntityType="Self.AddressInformation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressType" EntityType="Self.AddressType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employer" EntityType="Self.Employer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LastHiredBy" EntityType="Self.LastHiredBy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentProfile" EntityType="Self.PaymentProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PersonRole" EntityType="Self.PersonRole" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rating" EntityType="Self.Rating" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Scheduling" EntityType="Self.Scheduling" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Skills" EntityType="Self.Skills" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SkillsWorker" EntityType="Self.SkillsWorker" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkerAvailability" EntityType="Self.WorkerAvailability" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkerExperience" EntityType="Self.WorkerExperience" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkerSchedule" EntityType="Self.WorkerSchedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkerSkills" EntityType="Self.WorkerSkills" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Address_AddressType" Association="Self.FK_Address_AddressType">
             <End Role="AddressType" EntitySet="AddressType" />
+            <End Role="Address" EntitySet="Address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Address_Person" Association="Self.FK_Address_Person">
+            <End Role="Person" EntitySet="Person" />
             <End Role="Address" EntitySet="Address" />
           </AssociationSet>
           <AssociationSet Name="FK_AddressInfo_person" Association="Self.FK_AddressInfo_person">
             <End Role="Person" EntitySet="Person" />
             <End Role="AddressInformation" EntitySet="AddressInformation" />
           </AssociationSet>
+          <AssociationSet Name="FK_Comments_User" Association="Self.FK_Comments_User">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_Worker" Association="Self.FK_Comments_Worker">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employer_User" Association="Self.FK_Employer_User">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Employer" EntitySet="Employer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employer_Worker" Association="Self.FK_Employer_Worker">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Employer" EntitySet="Employer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LastHiredBy_Worker" Association="Self.FK_LastHiredBy_Worker">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="LastHiredBy" EntitySet="LastHiredBy" />
+          </AssociationSet>
           <AssociationSet Name="FK_PaymentProfile_id" Association="Self.FK_PaymentProfile_id">
             <End Role="Person" EntitySet="Person" />
             <End Role="PaymentProfile" EntitySet="PaymentProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_WorkerExperience" Association="Self.FK_Person_WorkerExperience">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="WorkerExperience" EntitySet="WorkerExperience" />
           </AssociationSet>
           <AssociationSet Name="FK_PersonRole_Role" Association="Self.FK_PersonRole_Role">
             <End Role="Role" EntitySet="Role" />
             <End Role="PersonRole" EntitySet="PersonRole" />
           </AssociationSet>
-          <AssociationSet Name="FK_Review_user" Association="Self.FK_Review_user">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Review" EntitySet="Review" />
+          <AssociationSet Name="FK_Rating_Skills" Association="Self.FK_Rating_Skills">
+            <End Role="Skills" EntitySet="Skills" />
+            <End Role="Rating" EntitySet="Rating" />
           </AssociationSet>
-          <AssociationSet Name="FK_Review_worker" Association="Self.FK_Review_worker">
+          <AssociationSet Name="FK_Rating_User" Association="Self.FK_Rating_User">
             <End Role="Person" EntitySet="Person" />
-            <End Role="Review" EntitySet="Review" />
+            <End Role="Rating" EntitySet="Rating" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rating_worker" Association="Self.FK_Rating_worker">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Rating" EntitySet="Rating" />
           </AssociationSet>
           <AssociationSet Name="FK_Roles_person" Association="Self.FK_Roles_person">
             <End Role="Person" EntitySet="Person" />
@@ -322,19 +517,19 @@
           </AssociationSet>
           <AssociationSet Name="FK_Scheduling_User" Association="Self.FK_Scheduling_User">
             <End Role="Person" EntitySet="Person" />
-            <End Role="Scheduling" EntitySet="Scheduling" />
+            <End Role="WorkerSchedule" EntitySet="WorkerSchedule" />
           </AssociationSet>
           <AssociationSet Name="FK_Scheduling_worker" Association="Self.FK_Scheduling_worker">
             <End Role="Person" EntitySet="Person" />
-            <End Role="Scheduling" EntitySet="Scheduling" />
+            <End Role="WorkerSchedule" EntitySet="WorkerSchedule" />
           </AssociationSet>
           <AssociationSet Name="FK_SkillsWorker_Skills" Association="Self.FK_SkillsWorker_Skills">
             <End Role="Skills" EntitySet="Skills" />
-            <End Role="SkillsWorker" EntitySet="SkillsWorker" />
+            <End Role="WorkerSkills" EntitySet="WorkerSkills" />
           </AssociationSet>
           <AssociationSet Name="FK_SkillsWorker_Worker" Association="Self.FK_SkillsWorker_Worker">
             <End Role="Person" EntitySet="Person" />
-            <End Role="SkillsWorker" EntitySet="SkillsWorker" />
+            <End Role="WorkerSkills" EntitySet="WorkerSkills" />
           </AssociationSet>
           <AssociationSet Name="FK_Transaction_user" Association="Self.FK_Transaction_user">
             <End Role="Person" EntitySet="Person" />
@@ -344,24 +539,136 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="Transaction" EntitySet="Transaction" />
           </AssociationSet>
+          <AssociationSet Name="FK_WorkerAvailability_Person" Association="Self.FK_WorkerAvailability_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="WorkerAvailability" EntitySet="WorkerAvailability" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HomeInModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HomeInEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Addresses" EntityType="HomeInModel.Address" />
+          <EntitySet Name="AddressInformations" EntityType="HomeInModel.AddressInformation" />
+          <EntitySet Name="AddressTypes" EntityType="HomeInModel.AddressType" />
+          <EntitySet Name="Comments" EntityType="HomeInModel.Comment" />
+          <EntitySet Name="Employers" EntityType="HomeInModel.Employer" />
+          <EntitySet Name="LastHiredBies" EntityType="HomeInModel.LastHiredBy" />
+          <EntitySet Name="PaymentProfiles" EntityType="HomeInModel.PaymentProfile" />
+          <EntitySet Name="People" EntityType="HomeInModel.Person" />
+          <EntitySet Name="PersonRoles" EntityType="HomeInModel.PersonRole" />
+          <EntitySet Name="Ratings" EntityType="HomeInModel.Rating" />
+          <EntitySet Name="Roles" EntityType="HomeInModel.Role" />
+          <EntitySet Name="Skills" EntityType="HomeInModel.Skill" />
+          <EntitySet Name="Transactions" EntityType="HomeInModel.Transaction" />
+          <EntitySet Name="WorkerAvailabilities" EntityType="HomeInModel.WorkerAvailability" />
+          <EntitySet Name="WorkerExperiences" EntityType="HomeInModel.WorkerExperience" />
+          <EntitySet Name="WorkerSchedules" EntityType="HomeInModel.WorkerSchedule" />
+          <EntitySet Name="WorkerSkills" EntityType="HomeInModel.WorkerSkill" />
+          <AssociationSet Name="FK_Address_AddressType" Association="HomeInModel.FK_Address_AddressType">
+            <End Role="AddressType" EntitySet="AddressTypes" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Address_Person" Association="HomeInModel.FK_Address_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AddressInfo_person" Association="HomeInModel.FK_AddressInfo_person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="AddressInformation" EntitySet="AddressInformations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_User" Association="HomeInModel.FK_Comments_User">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_Worker" Association="HomeInModel.FK_Comments_Worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employer_User" Association="HomeInModel.FK_Employer_User">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Employer" EntitySet="Employers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employer_Worker" Association="HomeInModel.FK_Employer_Worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Employer" EntitySet="Employers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LastHiredBy_Worker" Association="HomeInModel.FK_LastHiredBy_Worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="LastHiredBy" EntitySet="LastHiredBies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentProfile_id" Association="HomeInModel.FK_PaymentProfile_id">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PaymentProfile" EntitySet="PaymentProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_WorkerExperience" Association="HomeInModel.FK_Person_WorkerExperience">
+            <End Role="Person" EntitySet="People" />
+            <End Role="WorkerExperience" EntitySet="WorkerExperiences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rating_User" Association="HomeInModel.FK_Rating_User">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rating_worker" Association="HomeInModel.FK_Rating_worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Roles_person" Association="HomeInModel.FK_Roles_person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PersonRole" EntitySet="PersonRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_User" Association="HomeInModel.FK_Scheduling_User">
+            <End Role="Person" EntitySet="People" />
+            <End Role="WorkerSchedule" EntitySet="WorkerSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_worker" Association="HomeInModel.FK_Scheduling_worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="WorkerSchedule" EntitySet="WorkerSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SkillsWorker_Worker" Association="HomeInModel.FK_SkillsWorker_Worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="WorkerSkill" EntitySet="WorkerSkills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_user" Association="HomeInModel.FK_Transaction_user">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_worker" Association="HomeInModel.FK_Transaction_worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkerAvailability_Person" Association="HomeInModel.FK_WorkerAvailability_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="WorkerAvailability" EntitySet="WorkerAvailabilities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonRole_Role" Association="HomeInModel.FK_PersonRole_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="PersonRole" EntitySet="PersonRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rating_Skills" Association="HomeInModel.FK_Rating_Skills">
+            <End Role="Skill" EntitySet="Skills" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SkillsWorker_Skills" Association="HomeInModel.FK_SkillsWorker_Skills">
+            <End Role="Skill" EntitySet="Skills" />
+            <End Role="WorkerSkill" EntitySet="WorkerSkills" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
           <Property Name="type_id" Type="Int32" Nullable="false" />
-          <Property Name="street" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="city" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="state" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="zipcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="country" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="AddressType" Relationship="Self.FK_Address_AddressType" FromRole="Address" ToRole="AddressType" />
+          <Property Name="street" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="zipcode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AddressType" Relationship="HomeInModel.FK_Address_AddressType" FromRole="Address" ToRole="AddressType" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Address_Person" FromRole="Address" ToRole="Person" />
         </EntityType>
         <EntityType Name="AddressInformation">
           <Key>
@@ -373,16 +680,49 @@
           <Property Name="BedRooms" Type="Double" />
           <Property Name="Kitchen" Type="Double" />
           <Property Name="SquareFootSize" Type="Double" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_AddressInfo_person" FromRole="AddressInformation" ToRole="Person" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_AddressInfo_person" FromRole="AddressInformation" ToRole="Person" />
         </EntityType>
         <EntityType Name="AddressType">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Addresses" Relationship="Self.FK_Address_AddressType" FromRole="AddressType" ToRole="Address" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Addresses" Relationship="HomeInModel.FK_Address_AddressType" FromRole="AddressType" ToRole="Address" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="worker_id" Type="Int32" Nullable="false" />
+          <Property Name="comment1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="commentedOn" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Comments_User" FromRole="Comment" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_Comments_Worker" FromRole="Comment" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Employer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="worker_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Employer_User" FromRole="Employer" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_Employer_Worker" FromRole="Employer" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="LastHiredBy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="worker_Id" Type="Int32" Nullable="false" />
+          <Property Name="user_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="user_email" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+          <Property Name="user_phone" Type="Decimal" Precision="11" Scale="0" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_LastHiredBy_Worker" FromRole="LastHiredBy" ToRole="Person" />
         </EntityType>
         <EntityType Name="PaymentProfile">
           <Key>
@@ -391,8 +731,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="person_id" Type="Int32" Nullable="false" />
-          <Property Name="billing_address" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_PaymentProfile_id" FromRole="PaymentProfile" ToRole="Person" />
+          <Property Name="billing_address" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_PaymentProfile_id" FromRole="PaymentProfile" ToRole="Person" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -400,21 +740,29 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="facebook_id" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="first" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="middle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="last" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="address_id" Type="Int32" Nullable="false" />
-          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="AddressInformations" Relationship="Self.FK_AddressInfo_person" FromRole="Person" ToRole="AddressInformation" />
-          <NavigationProperty Name="PaymentProfiles" Relationship="Self.FK_PaymentProfile_id" FromRole="Person" ToRole="PaymentProfile" />
-          <NavigationProperty Name="Reviews" Relationship="Self.FK_Review_user" FromRole="Person" ToRole="Review" />
-          <NavigationProperty Name="Reviews1" Relationship="Self.FK_Review_worker" FromRole="Person" ToRole="Review" />
-          <NavigationProperty Name="PersonRoles" Relationship="Self.FK_Roles_person" FromRole="Person" ToRole="PersonRole" />
-          <NavigationProperty Name="Schedulings" Relationship="Self.FK_Scheduling_User" FromRole="Person" ToRole="Scheduling" />
-          <NavigationProperty Name="Schedulings1" Relationship="Self.FK_Scheduling_worker" FromRole="Person" ToRole="Scheduling" />
-          <NavigationProperty Name="SkillsWorkers" Relationship="Self.FK_SkillsWorker_Worker" FromRole="Person" ToRole="SkillsWorker" />
-          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_user" FromRole="Person" ToRole="Transaction" />
-          <NavigationProperty Name="Transactions1" Relationship="Self.FK_Transaction_worker" FromRole="Person" ToRole="Transaction" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+          <Property Name="picture" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="gender" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Addresses" Relationship="HomeInModel.FK_Address_Person" FromRole="Person" ToRole="Address" />
+          <NavigationProperty Name="AddressInformations" Relationship="HomeInModel.FK_AddressInfo_person" FromRole="Person" ToRole="AddressInformation" />
+          <NavigationProperty Name="Comments" Relationship="HomeInModel.FK_Comments_User" FromRole="Person" ToRole="Comment" />
+          <NavigationProperty Name="Comments1" Relationship="HomeInModel.FK_Comments_Worker" FromRole="Person" ToRole="Comment" />
+          <NavigationProperty Name="Employers" Relationship="HomeInModel.FK_Employer_User" FromRole="Person" ToRole="Employer" />
+          <NavigationProperty Name="Employers1" Relationship="HomeInModel.FK_Employer_Worker" FromRole="Person" ToRole="Employer" />
+          <NavigationProperty Name="LastHiredBies" Relationship="HomeInModel.FK_LastHiredBy_Worker" FromRole="Person" ToRole="LastHiredBy" />
+          <NavigationProperty Name="PaymentProfiles" Relationship="HomeInModel.FK_PaymentProfile_id" FromRole="Person" ToRole="PaymentProfile" />
+          <NavigationProperty Name="WorkerExperiences" Relationship="HomeInModel.FK_Person_WorkerExperience" FromRole="Person" ToRole="WorkerExperience" />
+          <NavigationProperty Name="Ratings" Relationship="HomeInModel.FK_Rating_User" FromRole="Person" ToRole="Rating" />
+          <NavigationProperty Name="Ratings1" Relationship="HomeInModel.FK_Rating_worker" FromRole="Person" ToRole="Rating" />
+          <NavigationProperty Name="PersonRoles" Relationship="HomeInModel.FK_Roles_person" FromRole="Person" ToRole="PersonRole" />
+          <NavigationProperty Name="WorkerSchedules" Relationship="HomeInModel.FK_Scheduling_User" FromRole="Person" ToRole="WorkerSchedule" />
+          <NavigationProperty Name="WorkerSchedules1" Relationship="HomeInModel.FK_Scheduling_worker" FromRole="Person" ToRole="WorkerSchedule" />
+          <NavigationProperty Name="WorkerSkills" Relationship="HomeInModel.FK_SkillsWorker_Worker" FromRole="Person" ToRole="WorkerSkill" />
+          <NavigationProperty Name="Transactions" Relationship="HomeInModel.FK_Transaction_user" FromRole="Person" ToRole="Transaction" />
+          <NavigationProperty Name="Transactions1" Relationship="HomeInModel.FK_Transaction_worker" FromRole="Person" ToRole="Transaction" />
+          <NavigationProperty Name="WorkerAvailabilities" Relationship="HomeInModel.FK_WorkerAvailability_Person" FromRole="Person" ToRole="WorkerAvailability" />
         </EntityType>
         <EntityType Name="PersonRole">
           <Key>
@@ -423,62 +771,42 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="role_id" Type="Int32" Nullable="false" />
           <Property Name="person_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Roles_person" FromRole="PersonRole" ToRole="Person" />
-          <NavigationProperty Name="Role" Relationship="Self.FK_PersonRole_Role" FromRole="PersonRole" ToRole="Role" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Roles_person" FromRole="PersonRole" ToRole="Person" />
+          <NavigationProperty Name="Role" Relationship="HomeInModel.FK_PersonRole_Role" FromRole="PersonRole" ToRole="Role" />
         </EntityType>
-        <EntityType Name="Review">
+        <EntityType Name="Rating">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="user_id" Type="Int32" Nullable="false" />
           <Property Name="worker_id" Type="Int32" Nullable="false" />
-          <Property Name="comment" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="rating" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Review_user" FromRole="Review" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_Review_worker" FromRole="Review" ToRole="Person" />
+          <Property Name="skill_id" Type="Int32" Nullable="false" />
+          <Property Name="rating1" Type="Int32" Nullable="false" />
+          <Property Name="ratedOn" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Rating_User" FromRole="Rating" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_Rating_worker" FromRole="Rating" ToRole="Person" />
+          <NavigationProperty Name="Skill" Relationship="HomeInModel.FK_Rating_Skills" FromRole="Rating" ToRole="Skill" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="PersonRoles" Relationship="Self.FK_PersonRole_Role" FromRole="Role" ToRole="PersonRole" />
-        </EntityType>
-        <EntityType Name="Scheduling">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="startdate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="enddate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="worker_id" Type="Int32" Nullable="false" />
-          <Property Name="user_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Scheduling_User" FromRole="Scheduling" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_Scheduling_worker" FromRole="Scheduling" ToRole="Person" />
+          <NavigationProperty Name="PersonRoles" Relationship="HomeInModel.FK_PersonRole_Role" FromRole="Role" ToRole="PersonRole" />
         </EntityType>
         <EntityType Name="Skill">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="equipment" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SkillsWorkers" Relationship="Self.FK_SkillsWorker_Skills" FromRole="Skills" ToRole="SkillsWorker" />
-        </EntityType>
-        <EntityType Name="SkillsWorker">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="skill_id" Type="Int32" Nullable="false" />
-          <Property Name="person_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_SkillsWorker_Worker" FromRole="SkillsWorker" ToRole="Person" />
-          <NavigationProperty Name="Skill" Relationship="Self.FK_SkillsWorker_Skills" FromRole="SkillsWorker" ToRole="Skills" />
+          <NavigationProperty Name="Ratings" Relationship="HomeInModel.FK_Rating_Skills" FromRole="Skill" ToRole="Rating" />
+          <NavigationProperty Name="WorkerSkills" Relationship="HomeInModel.FK_SkillsWorker_Skills" FromRole="Skill" ToRole="WorkerSkill" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
@@ -491,12 +819,57 @@
           <Property Name="user_id" Type="Int32" Nullable="false" />
           <Property Name="worker_id" Type="Int32" Nullable="false" />
           <Property Name="discount" Type="Double" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Transaction_user" FromRole="Transaction" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_Transaction_worker" FromRole="Transaction" ToRole="Person" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Transaction_user" FromRole="Transaction" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_Transaction_worker" FromRole="Transaction" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="WorkerAvailability">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="worker_Id" Type="Int32" Nullable="false" />
+          <Property Name="MilesWantToDrive" Type="Int32" />
+          <Property Name="DaysAvailable" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_WorkerAvailability_Person" FromRole="WorkerAvailability" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="WorkerExperience">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Years" Type="Double" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="PersonId" Type="Int32" Nullable="false" />
+          <Property Name="HoursWorked" Type="Double" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Person_WorkerExperience" FromRole="WorkerExperience" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="WorkerSchedule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="startdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="enddate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="worker_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_Scheduling_User" FromRole="WorkerSchedule" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_Scheduling_worker" FromRole="WorkerSchedule" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="WorkerSkill">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="skill_id" Type="Int32" Nullable="false" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <Property Name="averageRating" Type="Int32" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_SkillsWorker_Worker" FromRole="WorkerSkill" ToRole="Person" />
+          <NavigationProperty Name="Skill" Relationship="HomeInModel.FK_SkillsWorker_Skills" FromRole="WorkerSkill" ToRole="Skill" />
         </EntityType>
         <Association Name="FK_Address_AddressType">
-          <End Role="AddressType" Type="Self.AddressType" Multiplicity="1" />
-          <End Role="Address" Type="Self.Address" Multiplicity="*" />
+          <End Type="HomeInModel.AddressType" Role="AddressType" Multiplicity="1" />
+          <End Type="HomeInModel.Address" Role="Address" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AddressType">
               <PropertyRef Name="id" />
@@ -506,9 +879,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Address_Person">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Address" Role="Address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AddressInfo_person">
-          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
-          <End Role="AddressInformation" Type="Self.AddressInformation" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="HomeInModel.AddressInformation" Role="AddressInformation" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
@@ -518,9 +903,69 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Comments_User">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_Worker">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employer_User">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Employer" Role="Employer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employer">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employer_Worker">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Employer" Role="Employer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employer">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LastHiredBy_Worker">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.LastHiredBy" Role="LastHiredBy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="LastHiredBy">
+              <PropertyRef Name="worker_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PaymentProfile_id">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="PaymentProfile" Type="Self.PaymentProfile" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.PaymentProfile" Role="PaymentProfile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
@@ -530,33 +975,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Review_user">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+        <Association Name="FK_Person_WorkerExperience">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerExperience" Role="WorkerExperience" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Review">
+            <Dependent Role="WorkerExperience">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rating_User">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Rating">
               <PropertyRef Name="user_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Review_worker">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+        <Association Name="FK_Rating_worker">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Rating" Role="Rating" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Review">
+            <Dependent Role="Rating">
               <PropertyRef Name="worker_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Roles_person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="PersonRole" Type="Self.PersonRole" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.PersonRole" Role="PersonRole" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
@@ -567,44 +1024,44 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Scheduling_User">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerSchedule" Role="WorkerSchedule" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Scheduling">
+            <Dependent Role="WorkerSchedule">
               <PropertyRef Name="user_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Scheduling_worker">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerSchedule" Role="WorkerSchedule" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Scheduling">
+            <Dependent Role="WorkerSchedule">
               <PropertyRef Name="worker_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SkillsWorker_Worker">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="SkillsWorker" Type="Self.SkillsWorker" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerSkill" Role="WorkerSkill" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="SkillsWorker">
+            <Dependent Role="WorkerSkill">
               <PropertyRef Name="person_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Transaction_user">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Transaction" Role="Transaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
@@ -615,8 +1072,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Transaction_worker">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.Transaction" Role="Transaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Person">
               <PropertyRef Name="id" />
@@ -626,9 +1083,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkerAvailability_Person">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerAvailability" Role="WorkerAvailability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="WorkerAvailability">
+              <PropertyRef Name="worker_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PersonRole_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="PersonRole" Type="Self.PersonRole" Multiplicity="*" />
+          <End Type="HomeInModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="HomeInModel.PersonRole" Role="PersonRole" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
               <PropertyRef Name="id" />
@@ -638,85 +1107,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SkillsWorker_Skills">
-          <End Role="Skills" Type="Self.Skill" Multiplicity="1" />
-          <End Role="SkillsWorker" Type="Self.SkillsWorker" Multiplicity="*" />
+        <Association Name="FK_Rating_Skills">
+          <End Type="HomeInModel.Skill" Role="Skill" Multiplicity="1" />
+          <End Type="HomeInModel.Rating" Role="Rating" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Skills">
+            <Principal Role="Skill">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="SkillsWorker">
+            <Dependent Role="Rating">
               <PropertyRef Name="skill_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="HomeInEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Addresses" EntityType="Self.Address" />
-          <EntitySet Name="AddressInformations" EntityType="Self.AddressInformation" />
-          <EntitySet Name="AddressTypes" EntityType="Self.AddressType" />
-          <EntitySet Name="PaymentProfiles" EntityType="Self.PaymentProfile" />
-          <EntitySet Name="People" EntityType="Self.Person" />
-          <EntitySet Name="PersonRoles" EntityType="Self.PersonRole" />
-          <EntitySet Name="Reviews" EntityType="Self.Review" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="Schedulings" EntityType="Self.Scheduling" />
-          <EntitySet Name="Skills" EntityType="Self.Skill" />
-          <EntitySet Name="SkillsWorkers" EntityType="Self.SkillsWorker" />
-          <EntitySet Name="Transactions" EntityType="Self.Transaction" />
-          <AssociationSet Name="FK_Address_AddressType" Association="Self.FK_Address_AddressType">
-            <End Role="AddressType" EntitySet="AddressTypes" />
-            <End Role="Address" EntitySet="Addresses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AddressInfo_person" Association="Self.FK_AddressInfo_person">
-            <End Role="Person" EntitySet="People" />
-            <End Role="AddressInformation" EntitySet="AddressInformations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PaymentProfile_id" Association="Self.FK_PaymentProfile_id">
-            <End Role="Person" EntitySet="People" />
-            <End Role="PaymentProfile" EntitySet="PaymentProfiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Review_user" Association="Self.FK_Review_user">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Review" EntitySet="Reviews" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Review_worker" Association="Self.FK_Review_worker">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Review" EntitySet="Reviews" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Roles_person" Association="Self.FK_Roles_person">
-            <End Role="Person" EntitySet="People" />
-            <End Role="PersonRole" EntitySet="PersonRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Scheduling_User" Association="Self.FK_Scheduling_User">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Scheduling" EntitySet="Schedulings" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Scheduling_worker" Association="Self.FK_Scheduling_worker">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Scheduling" EntitySet="Schedulings" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SkillsWorker_Worker" Association="Self.FK_SkillsWorker_Worker">
-            <End Role="Person" EntitySet="People" />
-            <End Role="SkillsWorker" EntitySet="SkillsWorkers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transaction_user" Association="Self.FK_Transaction_user">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Transaction" EntitySet="Transactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transaction_worker" Association="Self.FK_Transaction_worker">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Transaction" EntitySet="Transactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PersonRole_Role" Association="Self.FK_PersonRole_Role">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="PersonRole" EntitySet="PersonRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SkillsWorker_Skills" Association="Self.FK_SkillsWorker_Skills">
-            <End Role="Skills" EntitySet="Skills" />
-            <End Role="SkillsWorker" EntitySet="SkillsWorkers" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <Association Name="FK_SkillsWorker_Skills">
+          <End Type="HomeInModel.Skill" Role="Skill" Multiplicity="1" />
+          <End Type="HomeInModel.WorkerSkill" Role="WorkerSkill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Skill">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="WorkerSkill">
+              <PropertyRef Name="skill_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -725,130 +1140,185 @@
           <EntitySetMapping Name="Addresses">
             <EntityTypeMapping TypeName="HomeInModel.Address">
               <MappingFragment StoreEntitySet="Address">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="type_id" ColumnName="type_id" />
-                <ScalarProperty Name="street" ColumnName="street" />
-                <ScalarProperty Name="city" ColumnName="city" />
-                <ScalarProperty Name="state" ColumnName="state" />
-                <ScalarProperty Name="zipcode" ColumnName="zipcode" />
                 <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="zipcode" ColumnName="zipcode" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="street" ColumnName="street" />
+                <ScalarProperty Name="type_id" ColumnName="type_id" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AddressInformations">
             <EntityTypeMapping TypeName="HomeInModel.AddressInformation">
               <MappingFragment StoreEntitySet="AddressInformation">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="person_id" ColumnName="person_id" />
-                <ScalarProperty Name="LivingRooms" ColumnName="LivingRooms" />
-                <ScalarProperty Name="BedRooms" ColumnName="BedRooms" />
-                <ScalarProperty Name="Kitchen" ColumnName="Kitchen" />
                 <ScalarProperty Name="SquareFootSize" ColumnName="SquareFootSize" />
+                <ScalarProperty Name="Kitchen" ColumnName="Kitchen" />
+                <ScalarProperty Name="BedRooms" ColumnName="BedRooms" />
+                <ScalarProperty Name="LivingRooms" ColumnName="LivingRooms" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AddressTypes">
             <EntityTypeMapping TypeName="HomeInModel.AddressType">
               <MappingFragment StoreEntitySet="AddressType">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="HomeInModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="commentedOn" ColumnName="commentedOn" />
+                <ScalarProperty Name="comment1" ColumnName="comment" />
+                <ScalarProperty Name="worker_id" ColumnName="worker_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employers">
+            <EntityTypeMapping TypeName="HomeInModel.Employer">
+              <MappingFragment StoreEntitySet="Employer">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="worker_id" ColumnName="worker_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LastHiredBies">
+            <EntityTypeMapping TypeName="HomeInModel.LastHiredBy">
+              <MappingFragment StoreEntitySet="LastHiredBy">
+                <ScalarProperty Name="user_phone" ColumnName="user_phone" />
+                <ScalarProperty Name="user_email" ColumnName="user_email" />
+                <ScalarProperty Name="user_name" ColumnName="user_name" />
+                <ScalarProperty Name="worker_Id" ColumnName="worker_Id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PaymentProfiles">
             <EntityTypeMapping TypeName="HomeInModel.PaymentProfile">
               <MappingFragment StoreEntitySet="PaymentProfile">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="type" ColumnName="type" />
-                <ScalarProperty Name="person_id" ColumnName="person_id" />
                 <ScalarProperty Name="billing_address" ColumnName="billing_address" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="HomeInModel.Person">
               <MappingFragment StoreEntitySet="Person">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="facebook_id" ColumnName="facebook_id" />
-                <ScalarProperty Name="first" ColumnName="first" />
-                <ScalarProperty Name="middle" ColumnName="middle" />
-                <ScalarProperty Name="last" ColumnName="last" />
-                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="facebook_id" ColumnName="facebook_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PersonRoles">
             <EntityTypeMapping TypeName="HomeInModel.PersonRole">
               <MappingFragment StoreEntitySet="PersonRole">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="role_id" ColumnName="role_id" />
                 <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Reviews">
-            <EntityTypeMapping TypeName="HomeInModel.Review">
-              <MappingFragment StoreEntitySet="Review">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <EntitySetMapping Name="Ratings">
+            <EntityTypeMapping TypeName="HomeInModel.Rating">
+              <MappingFragment StoreEntitySet="Rating">
+                <ScalarProperty Name="ratedOn" ColumnName="ratedOn" />
+                <ScalarProperty Name="rating1" ColumnName="rating" />
+                <ScalarProperty Name="skill_id" ColumnName="skill_id" />
                 <ScalarProperty Name="worker_id" ColumnName="worker_id" />
-                <ScalarProperty Name="comment" ColumnName="comment" />
-                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="HomeInModel.Role">
               <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="description" ColumnName="description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Schedulings">
-            <EntityTypeMapping TypeName="HomeInModel.Scheduling">
-              <MappingFragment StoreEntitySet="Scheduling">
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="startdate" ColumnName="startdate" />
-                <ScalarProperty Name="enddate" ColumnName="enddate" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="worker_id" ColumnName="worker_id" />
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Skills">
             <EntityTypeMapping TypeName="HomeInModel.Skill">
               <MappingFragment StoreEntitySet="Skills">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="equipment" ColumnName="equipment" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SkillsWorkers">
-            <EntityTypeMapping TypeName="HomeInModel.SkillsWorker">
-              <MappingFragment StoreEntitySet="SkillsWorker">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="skill_id" ColumnName="skill_id" />
-                <ScalarProperty Name="person_id" ColumnName="person_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Transactions">
             <EntityTypeMapping TypeName="HomeInModel.Transaction">
               <MappingFragment StoreEntitySet="Transaction">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="payment_id_user" ColumnName="payment_id_user" />
-                <ScalarProperty Name="payment_id_worker" ColumnName="payment_id_worker" />
+                <ScalarProperty Name="discount" ColumnName="discount" />
+                <ScalarProperty Name="worker_id" ColumnName="worker_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="amountCharged" ColumnName="amountCharged" />
+                <ScalarProperty Name="payment_id_worker" ColumnName="payment_id_worker" />
+                <ScalarProperty Name="payment_id_user" ColumnName="payment_id_user" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkerAvailabilities">
+            <EntityTypeMapping TypeName="HomeInModel.WorkerAvailability">
+              <MappingFragment StoreEntitySet="WorkerAvailability">
+                <ScalarProperty Name="DaysAvailable" ColumnName="DaysAvailable" />
+                <ScalarProperty Name="MilesWantToDrive" ColumnName="MilesWantToDrive" />
+                <ScalarProperty Name="worker_Id" ColumnName="worker_Id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkerExperiences">
+            <EntityTypeMapping TypeName="HomeInModel.WorkerExperience">
+              <MappingFragment StoreEntitySet="WorkerExperience">
+                <ScalarProperty Name="HoursWorked" ColumnName="HoursWorked" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Years" ColumnName="Years" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkerSchedules">
+            <EntityTypeMapping TypeName="HomeInModel.WorkerSchedule">
+              <MappingFragment StoreEntitySet="WorkerSchedule">
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="worker_id" ColumnName="worker_id" />
-                <ScalarProperty Name="discount" ColumnName="discount" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkerSkills">
+            <EntityTypeMapping TypeName="HomeInModel.WorkerSkill">
+              <MappingFragment StoreEntitySet="WorkerSkills">
+                <ScalarProperty Name="averageRating" ColumnName="averageRating" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="skill_id" ColumnName="skill_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

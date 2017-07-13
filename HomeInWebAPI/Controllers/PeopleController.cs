@@ -38,22 +38,20 @@ namespace Controllers
             return Ok(person);
         }
 
-        //[ResponseType(typeof(Person))]
+        //Get worker schedule
         [Route("schedule")]
         [HttpGet]
         public IHttpActionResult GetPersonSchedule(int id)
         {
             var schedule = (from p in db.People
-                        join sch in db.Schedulings on p.id equals sch.worker_id
+                        join sch in db.WorkerSchedules on p.id equals sch.worker_id
                         join r in db.PersonRoles on p.id equals r.person_id
                         join role in db.Roles on r.role_id equals role.id
                         where p.id == id
                         select new
                         {
                             Id = p.id,
-                            FirstName = p.first,
-                            MiddleName = p.middle,
-                            LastName = p.last,
+                            Name = p.name,
                             RoleId = r.role_id,
                             RoleName = role.name,
                             RoleDescription = role.description,
@@ -63,6 +61,34 @@ namespace Controllers
 
             return Ok(schedule);
         }
+
+        //[Route("worker")]
+        //[HttpGet]
+        //public IHttpActionResult GetWorker(int Workerid)
+        //{
+        //    var skills = (from p in db.People
+        //                    join sw in db.SkillsWorkers on p.id equals sw.person_id
+        //                    join s in db.Skills on sw.skill_id equals s.id
+        //                    where p.id == Workerid
+        //                    select new
+        //                    {
+        //                        Skill = s.name,
+        //                        Rating = sw.averageRating
+                                
+        //                    }).ToList();
+
+        //    var lastHired = (from p in db.People
+        //                     join lh in db.LastHired on p.id equals lh.workerId
+        //                     join user in db.People on lh.userId equals user.id
+        //                     where p.id == Workerid
+        //                     select new
+        //                     {
+        //                         Worker = 
+        //                         Name 
+        //                     })
+
+        //    return Ok(schedule);
+        //}
 
         // PUT: api/People/5
         [ResponseType(typeof(void))]

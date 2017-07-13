@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class BaseController : ApiController
     {
     }
