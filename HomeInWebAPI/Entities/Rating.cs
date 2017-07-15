@@ -21,8 +21,8 @@ namespace HomeInWebAPI.Entities
         public int rating1 { get; set; }
         public System.DateTime ratedOn { get; set; }
     
+        public virtual Skill Skill { get; set; }
         public virtual Person Person { get; set; }
         public virtual Person Person1 { get; set; }
-        public virtual Skill Skill { get; set; }
     }
 }

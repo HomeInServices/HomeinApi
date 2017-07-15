@@ -18,7 +18,7 @@ namespace HomeInWebAPI.Entities
         public int role_id { get; set; }
         public int person_id { get; set; }
     
-        public virtual Person Person { get; set; }
         public virtual Role Role { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

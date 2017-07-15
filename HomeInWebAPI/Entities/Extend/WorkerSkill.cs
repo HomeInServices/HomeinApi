@@ -1,13 +1,14 @@
 
 namespace HomeInWebAPI.Entities
 {
-    public partial class Scheduling
+    
+    public partial class WorkerSkill
     {
         public bool ShouldSerializePerson()
             {
                 return false;
             }
-			public bool ShouldSerializePerson1()
+		public bool ShouldSerializeSkill()
             {
                 return false;
             }

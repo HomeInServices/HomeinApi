@@ -19,7 +19,7 @@ namespace HomeInWebAPI.Entities
         public int person_id { get; set; }
         public Nullable<int> averageRating { get; set; }
     
-        public virtual Person Person { get; set; }
         public virtual Skill Skill { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

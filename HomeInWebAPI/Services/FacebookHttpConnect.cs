@@ -18,13 +18,21 @@ namespace HomeInWebAPI.Services
     public class FacebookHttpConnect : IFacebookClient
     {
         private readonly HttpClient _httpClient;
+        private readonly string facebookURL = "https://graph.facebook.com/v2.9/";
 
         public FacebookHttpConnect()
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://graph.facebook.com/v2.8/")
-            };
+            //_httpClient = new HttpClient
+            //{
+            //    BaseAddress = new Uri("https://graph.facebook.com/v2.9/")
+            //    //BaseAddress = new Uri("https://graph.facebook.com/#/v2.9/")
+            //};
+            //_httpClient.DefaultRequestHeaders
+            //    .Accept
+            //    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            _httpClient = new HttpClient();
+            
             _httpClient.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -32,7 +40,9 @@ namespace HomeInWebAPI.Services
 
         public async Task<T> GetAsync<T>(string accessToken, string endpoint, string args = null)
         {
-            var response = await _httpClient.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
+            var url = this.facebookURL+endpoint + "?" + args + "&" + "access_token=" + accessToken;
+            //var response = await _httpClient.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
+            var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
                 return default(T);
 

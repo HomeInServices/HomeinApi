@@ -26,7 +26,7 @@ namespace HomeInWebAPI.Services
         public async Task<PersonModel> GetAccountAsync(string accessToken)
         {
             var result = await _facebookClient.GetAsync<dynamic>(
-                accessToken, "me", "fields=id,name,email,age_range,birthday,gender,locale");
+                accessToken, "me", "fields=id,name,email,gender,picture");
 
             if (result == null)
             {
@@ -39,7 +39,9 @@ namespace HomeInWebAPI.Services
                 Id = result.id,
                 Email = result.email,
                 Name = result.name,
-                Gender = result.gender
+                Gender = result.gender,
+                //Picture = result.picture
+                Picture = ""
 
             };
 

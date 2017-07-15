@@ -12,15 +12,41 @@ namespace HomeInWebAPI.Entities
                 return false;
             }
 
+            public bool ShouldSerializeComments()
+            {
+                return false;
+            }
+            public bool ShouldSerializeComments1()
+            {
+                return false;
+            }
+            public bool ShouldSerializeEmployers()
+            {
+                return false;
+            }
+            public bool ShouldSerializeEmployers1()
+            {
+                return false;
+            }
+
+            public bool ShouldSerializeLastHiredBies()
+            {
+            return false;
+            }
+
             public bool ShouldSerializePaymentProfiles()
             {
                 return false;
             }
-            public bool ShouldSerializeReviews()
+            public bool ShouldSerializeWorkerExperiences()
             {
                 return false;
             }
-            public bool ShouldSerializeReviews1()
+            public bool ShouldSerializeRatings()
+            {
+                return false;
+            }
+            public bool ShouldSerializeRatings1()
             {
                 return false;
             }
@@ -29,16 +55,16 @@ namespace HomeInWebAPI.Entities
             {
                 return false;
             }
-            public bool ShouldSerializeSchedulings()
+            public bool ShouldSerializeWorkerSchedules()
             {
                 return false;
             }
 
-            public bool ShouldSerializeSchedulings1()
+            public bool ShouldSerializeWorkerSchedules1()
             {
                 return false;
             }
-            public bool ShouldSerializeSkillsWorkers()
+            public bool ShouldSerializeWorkerSkills()
             {
                 return false;
             }
@@ -48,6 +74,10 @@ namespace HomeInWebAPI.Entities
             }
 
             public bool ShouldSerializeTransactions1()
+            {
+                return false;
+            }
+            public bool ShouldSerializeWorkerAvailabilities()
             {
                 return false;
             }

@@ -44,7 +44,7 @@ namespace HomeInWebAPI.App_Start
                     AppId = "1734115113548184",
                     AppSecret = "b9bfbe8f4d42bc44cc5450f74c25e6f9",
                     Scope = { "email", "public_profile", "user_friends", "user_photos" },
-                    Fields = { "name", "email", "gender", "age_range", "birthday", "locale" },
+                    Fields = { "name", "email", "gender", "age_range", "birthday", "locale", "picture" },
                     Provider = new FacebookAuthenticationProvider
                     {
                         OnAuthenticated = (context) =>

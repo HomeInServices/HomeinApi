@@ -3,9 +3,14 @@ namespace HomeInWebAPI.Entities
 {
     public partial class Skill
     {
-		public bool ShouldSerializeSkillsWorkers()
-            {
-                return false;
-            }
+		
+        public bool ShouldSerializeWorkerSkills()
+        {
+            return false;
+        }
+        public bool ShouldSerializeRatings()
+        {
+            return false;
+        }
     }
 }

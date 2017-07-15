@@ -3,7 +3,7 @@
 namespace HomeInWebAPI.Entities
 {
 
-    public partial class Review
+    public partial class Rating
     {
 		public bool ShouldSerializePerson()
             {
@@ -13,6 +13,10 @@ namespace HomeInWebAPI.Entities
             {
                 return false;
             }
-        
+        public bool ShouldSerializeSkill()
+        {
+            return false;
+        }
+
     }
 }

@@ -32,7 +32,6 @@ namespace HomeInWebAPI.Entities
         public virtual DbSet<Employer> Employers { get; set; }
         public virtual DbSet<LastHiredBy> LastHiredBies { get; set; }
         public virtual DbSet<PaymentProfile> PaymentProfiles { get; set; }
-        public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonRole> PersonRoles { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -42,5 +41,6 @@ namespace HomeInWebAPI.Entities
         public virtual DbSet<WorkerExperience> WorkerExperiences { get; set; }
         public virtual DbSet<WorkerSchedule> WorkerSchedules { get; set; }
         public virtual DbSet<WorkerSkill> WorkerSkills { get; set; }
+        public virtual DbSet<Person> Person { get; set; }
     }
 }
