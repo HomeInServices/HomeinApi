@@ -297,6 +297,10 @@
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Worker.cs" />
+    <Compile Include="Models\Worker\EmployerReferral.cs" />
+    <Compile Include="Models\Worker\SkillsPaymentOptions.cs" />
+    <Compile Include="Models\Worker\BasicInformation.cs" />
+    <Compile Include="Models\Worker\WorkerSchedule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\FacebookProvider.cs" />
     <Compile Include="Services\FacebookHttpConnect.cs" />

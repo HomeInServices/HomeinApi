@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using HomeInWebAPI.Entities;
+using Controllers;
 
 namespace HomeInWebAPI.Controllers
 {
-    public class WorkerScheduleController : ApiController
+    public class WorkerScheduleController : BaseController
     {
         private HomeInEntities db = new HomeInEntities();
 

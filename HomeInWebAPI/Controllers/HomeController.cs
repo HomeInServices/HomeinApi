@@ -46,7 +46,7 @@ namespace Controllers
 
                 using (HomeInEntities context = new HomeInEntities())
                 {
-                    Person person = context.Person.FirstOrDefault(x => x.facebook_id == userProfile.facebookId);
+                    Person person = context.People.FirstOrDefault(x => x.facebook_id == userProfile.facebookId);
                     
                     if(person != null)
                     {
@@ -54,7 +54,7 @@ namespace Controllers
                     }
                     else
                     {
-                        context.Person.Add(new Person
+                        context.People.Add(new Person
 
                         {
                             facebook_id = userProfile.facebookId,

@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using HomeInWebAPI;
 using HomeInWebAPI.Entities;
+using HomeInWebAPI.Models.Worker;
 
 namespace Controllers
 {
@@ -21,14 +22,14 @@ namespace Controllers
         // GET: api/People
         public IQueryable<Person> GetPeople()
         {
-            return db.Person;
+            return db.People;
         }
 
         // GET: api/People/5
         [ResponseType(typeof(Person))]
         public IHttpActionResult GetPerson(int id)
         {
-            Person person = db.Person.Find(id);
+            Person person = db.People.Find(id);
             
             if (person == null)
             {
@@ -38,13 +39,18 @@ namespace Controllers
             return Ok(person);
         }
 
-        //Get worker schedule
-        [Route("schedule")]
+        /*Worker Schedule*/
+        /// <summary>
+        /// Get Schedule of a worker
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("workerSchedule")]
         [HttpGet]
         public IHttpActionResult GetPersonSchedule(int id)
         {
-            var schedule = (from p in db.Person
-                        join sch in db.WorkerSchedules on p.id equals sch.worker_id
+            var schedule = (from p in db.People
+                            join sch in db.WorkerSchedules on p.id equals sch.worker_id
                         join r in db.PersonRoles on p.id equals r.person_id
                         join role in db.Roles on r.role_id equals role.id
                         where p.id == id
@@ -62,8 +68,9 @@ namespace Controllers
             return Ok(schedule);
         }
 
+        /*User Screen - */
         /// <summary>
-        /// Get worker information based on their id
+        /// Get worker information based on their skills and last Employer 
         /// </summary>
         /// <param name="Workerid"></param>
         /// <returns></returns>
@@ -71,7 +78,7 @@ namespace Controllers
         [HttpGet]
         public IHttpActionResult GetWorker(int Workerid)
         {
-            var skills = (from p in db.Person
+            var skills = (from p in db.People
                           join sw in db.WorkerSkills on p.id equals sw.person_id
                           join s in db.Skills on sw.skill_id equals s.id
                           where p.id == Workerid && sw.averageRating > 2 //get avg rating better than 3
@@ -83,8 +90,8 @@ namespace Controllers
 
                           }).ToList();
 
-            var workerInfo = (from p in db.Person
-                                 where p.id == Workerid
+            var workerInfo = (from p in db.People
+                              where p.id == Workerid
                                  select new
                                  {
                                      Name = p.name,
@@ -92,9 +99,9 @@ namespace Controllers
 
                                  }).FirstOrDefault();
 
-            var lastHired = (from p in db.Person
+            var lastHired = (from p in db.People
                              join lh in db.Employers on p.id equals lh.worker_id
-                             join user in db.Person on lh.user_id equals user.id
+                             join user in db.People on lh.user_id equals user.id
                              where p.id == Workerid
                              select new
                              {
@@ -115,91 +122,154 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Get worker information based on their id
+        /// Get worker information for prefilling preferences screen
         /// </summary>
         /// <param name="Workerid"></param>
         /// <returns></returns>
-        [Route("WorkerPreferences")]
+        [Route("workerPreferences")]
         [HttpGet]
         public IHttpActionResult GetWorkerPreferences(int workerId)
         {
-            var skills = (from p in db.Person
-                          join sw in db.WorkerSkills on p.id equals sw.person_id
-                          join s in db.Skills on sw.skill_id equals s.id
-                          where p.id == workerId
-                          select new
-                          {
-                              Name = p.name,
-                              Skill = s.name,
-                              Rating = sw.averageRating
+            if(workerId >= 0) { 
 
-                          }).ToList();
-            var addressList =  (from p in db.Person
-                                join a in db.Addresses on p.id equals a.person_id
-                                where p.id == workerId
-                                select new
-                                          {
+                    var skills = (from p in db.People
+                                  join sw in db.WorkerSkills on p.id equals sw.person_id
+                                  join s in db.Skills on sw.skill_id equals s.id
+                                  where p.id == workerId
+                                  select new
+                                  {
+                                      Name = p.name,
+                                      Skill = s.name,
+                                      Rating = sw.averageRating
 
-                                           Street = a.street,
-                                           State = a.state,
-                                           Zipcode = a.zipcode,
-                                           Address = a.street + "," + a.state + "," + a.zipcode
+                                  }).ToList();
+                    var addressList =  (from p in db.People
+                                        join a in db.Addresses on p.id equals a.person_id
+                                        where p.id == workerId
+                                        select new
+                                                  {
 
-                                           }).ToList();
+                                                   Street = a.street,
+                                                   State = a.state,
+                                                   Zipcode = a.zipcode,
+                                                   Address = a.street + "," + a.state + "," + a.zipcode
 
-            var workerInfo = (from p in db.Person
-                              where p.id == workerId
-                              select new
-                              {
-                                  Name = p.name,
-                                  Gender = p.gender,
-                                  Email = p.email,
-                                  Phone = p.phone,
-                              }).FirstOrDefault();
+                                                   }).ToList();
 
-            var lastHired = (from p in db.Person
-                             join lh in db.LastHiredBies on p.id equals lh.worker_Id
-                             where p.id == workerId
-                             select new
-                             {
-                                 Name = lh.user_name,
-                                 Email = lh.user_email,
-                                 Phone = lh.user_phone
-                             }).FirstOrDefault();
+                    var workerInfo = (from p in db.People
+                                      where p.id == workerId
+                                      select new
+                                      {
+                                          Name = p.name,
+                                          Gender = p.gender,
+                                          Email = p.email,
+                                          Phone = p.phone,
+                                      }).FirstOrDefault();
 
-            var paymentInfo = (from p in db.Person
-                               join pay in db.PaymentProfiles on p.id equals pay.person_id
-                               where p.id == workerId
-                               select new
-                               {
-                                   PaymentMode = pay.type
-                                   
-                               }).FirstOrDefault();
+                    var lastHired = (from p in db.People
+                                     join lh in db.LastHiredBies on p.id equals lh.worker_Id
+                                     where p.id == workerId
+                                     select new
+                                     {
+                                         Name = lh.user_name,
+                                         Email = lh.user_email,
+                                         Phone = lh.user_phone
+                                     }).FirstOrDefault();
 
-            var availability = (from p in db.Person
-                                       join a in db.WorkerAvailabilities on p.id equals a.worker_Id
+                    var paymentInfo = (from p in db.People
+                                       join pay in db.PaymentProfiles on p.id equals pay.person_id
                                        where p.id == workerId
                                        select new
                                        {
-                                           MilesWillingToDrive = a.MilesWantToDrive,
-                                           AvailableDays = a.DaysAvailable
-
+                                           PaymentMode = pay.type
+                                   
                                        }).FirstOrDefault();
-            var Worker = new
-            {
-                id = workerId,
-                Name = workerInfo.Name,
-                Skills = skills,
-                Address = addressList,
-                Payment = paymentInfo,
-                Availability = availability,
-                Employers = lastHired,
-            };
+
+                    var availability = (from p in db.People
+                                        join a in db.WorkerAvailabilities on p.id equals a.worker_Id
+                                               where p.id == workerId
+                                               select new
+                                               {
+                                                   MilesWillingToDrive = a.MilesWantToDrive,
+                                                   AvailableDays = a.DaysAvailable
+
+                                               }).FirstOrDefault();
+                    var Worker = new
+                                    {
+                                        id = workerId,
+                                        Name = workerInfo.Name,
+                                        Skills = skills,
+                                        Address = addressList,
+                                        Payment = paymentInfo,
+                                        Availability = availability,
+                                        Employers = lastHired,
+                                    };
 
 
-            return Ok(Worker);
+                    return Ok(Worker);
+                }
+                else
+                {
+                    return BadRequest("Worker is invalid");
+                }
         }
-        // PUT: api/People/5
+
+        [Route("workerBasicInformation")]
+        [HttpPost]
+        public IHttpActionResult PostBasicInformation(BasicInformation bi)
+        {
+            if(bi != null) { 
+                using (var dbv = new HomeInEntities())
+                {
+                    
+                    var resultPerson = dbv.People.SingleOrDefault(x => x.facebook_id == bi.facebookid);
+
+                    if (resultPerson != null)
+                    { 
+                        var resultAddress = dbv.Addresses.FirstOrDefault(x => x.person_id == resultPerson.id);
+                        var resultMWD = dbv.WorkerAvailabilities.FirstOrDefault(x => x.worker_Id == resultPerson.id);
+
+                        if (resultAddress != null && resultMWD != null)
+                        {
+                            resultPerson.phone = bi.phone;
+
+                            resultAddress.street = bi.street;
+                            resultAddress.city = bi.city;
+                            resultAddress.state = bi.state;
+                            resultAddress.country = bi.country;
+                            resultAddress.zipcode = bi.zipcode;
+
+                            resultMWD.MilesWantToDrive = bi.MilesWantToDrive;
+                            try
+                            { 
+                                dbv.SaveChanges();
+                                return Ok("Basic Information updated ");
+                            }
+                            catch(Exception e)
+                            {
+                                return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Error: Request cannot be completed at this time.");
+                    }
+                 }
+            }
+            else
+            {
+                BadRequest("Error: Basic information is invalid, please review.");
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+        /// <summary>
+        /// api/People/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="person"></param>
+        /// <returns></returns>
         [ResponseType(typeof(void))]
         public IHttpActionResult PutPerson(int id, Person person)
         {
@@ -234,32 +304,22 @@ namespace Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/People
-        [ResponseType(typeof(Person))]
-        public IHttpActionResult PostPerson(Person person)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Person.Add(person);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = person.id }, person);
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/People/5
         [ResponseType(typeof(Person))]
         public IHttpActionResult DeletePerson(int id)
         {
-            Person person = db.Person.Find(id);
+            Person person = db.People.Find(id);
             if (person == null)
             {
                 return NotFound();
             }
 
-            db.Person.Remove(person);
+            db.People.Remove(person);
             db.SaveChanges();
 
             return Ok(person);
@@ -276,7 +336,7 @@ namespace Controllers
 
         private bool PersonExists(int id)
         {
-            return db.Person.Count(e => e.id == id) > 0;
+            return db.People.Count(e => e.id == id) > 0;
         }
     }
 }

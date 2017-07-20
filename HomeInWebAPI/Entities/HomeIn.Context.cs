@@ -41,6 +41,6 @@ namespace HomeInWebAPI.Entities
         public virtual DbSet<WorkerExperience> WorkerExperiences { get; set; }
         public virtual DbSet<WorkerSchedule> WorkerSchedules { get; set; }
         public virtual DbSet<WorkerSkill> WorkerSkills { get; set; }
-        public virtual DbSet<Person> Person { get; set; }
+        public virtual DbSet<Person> People { get; set; }
     }
 }

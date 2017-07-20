@@ -654,7 +654,7 @@
             <End Role="Person" EntitySet="People" />
             <End Role="WorkerAvailability" EntitySet="WorkerAvailabilities" />
           </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="id" />
