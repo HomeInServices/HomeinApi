@@ -7,17 +7,17 @@ namespace HomeInWebAPI.Models.Worker
 {
     public class BasicInformation
     {
-        BasicInformation()
-        {
-            facebookid = "";
-            phone = "";
-            MilesWantToDrive = 0;
-            street = "";
-            city = "";
-            state = "";
-            country = "";
-            zipcode = "";
-        }
+        //BasicInformation()
+        //{
+        //    facebookid = "";
+        //    phone = "";
+        //    MilesWantToDrive = 0;
+        //    street = "";
+        //    city = "";
+        //    state = "";
+        //    country = "";
+        //    zipcode = "";
+        //}
 
         public string facebookid { get; set; }
         public string phone { get; set; }

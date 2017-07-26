@@ -20,10 +20,10 @@ namespace Controllers
         private HomeInEntities db = new HomeInEntities();
 
         // GET: api/People
-        public IQueryable<Person> GetPeople()
-        {
-            return db.People;
-        }
+        //public IQueryable<Person> GetPeople()
+        //{
+        //    return db.People;
+        //}
 
         // GET: api/People/5
         [ResponseType(typeof(Person))]
@@ -84,6 +84,7 @@ namespace Controllers
                           where p.id == Workerid && sw.averageRating > 2 //get avg rating better than 3
                           select new
                           {
+                              SkillId = s.id,
                               Name = p.name,
                               Skill = s.name,
                               Rating = sw.averageRating
@@ -222,7 +223,7 @@ namespace Controllers
                 using (var dbv = new HomeInEntities())
                 {
                     
-                    var resultPerson = dbv.People.SingleOrDefault(x => x.facebook_id == bi.facebookid);
+                    var resultPerson = dbv.People.FirstOrDefault(x => x.facebook_id == bi.facebookid);
 
                     if (resultPerson != null)
                     { 
@@ -251,10 +252,43 @@ namespace Controllers
                             }
 
                         }
+                        else
+                        {
+                            Address ad = new Address()
+                            {
+                                person_id = resultPerson.id,
+                                type_id = 1,
+                                street = bi.street,
+                                city = bi.city,
+                                state = bi.state,
+                                country = bi.country,
+                                zipcode = bi.zipcode
+                            };
+                            dbv.Addresses.Add(ad);
+
+                            WorkerAvailability wa = new WorkerAvailability()
+                            {
+                                worker_Id = resultPerson.id,
+                                MilesWantToDrive = bi.MilesWantToDrive,
+                                DaysAvailable = ""
+                            };
+                            dbv.WorkerAvailabilities.Add(wa);
+
+                            resultPerson.phone = bi.phone;
+                        }
+                        try
+                        {
+                            dbv.SaveChanges();
+                            return Ok("Basic Information updated ");
+                        }
+                        catch (Exception e)
+                        {
+                            return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                        }
                     }
                     else
                     {
-                        return BadRequest("Error: Request cannot be completed at this time.");
+                        return BadRequest("Error: Request cannot be completed at this time. Please register with the application");
                     }
                  }
             }
@@ -263,6 +297,103 @@ namespace Controllers
                 BadRequest("Error: Basic information is invalid, please review.");
             }
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Route("workerSkillsPaymentOptions")]
+        [HttpPost]
+        public IHttpActionResult SkillsPaymentOptions(SkillsPaymentOptions spo)
+        {
+            if (spo != null)
+            {
+                using (var dbv = new HomeInEntities())
+                {
+                    var resultPerson = dbv.People.SingleOrDefault(x => x.facebook_id == spo.facebookid);
+
+                    if (resultPerson != null)
+                    {
+                        var resultPayment = dbv.PaymentProfiles.FirstOrDefault(x => x.person_id == resultPerson.id);
+
+                        if (WorkerSkillsDelete(spo))
+                        {
+                            foreach (var skillId in spo.SkillIds)
+                            {
+                                WorkerSkill ws = new WorkerSkill()
+                                {
+                                    skill_id = skillId,
+                                    person_id = resultPerson.id,
+                                    averageRating = null
+                                };
+                                dbv.WorkerSkills.Add(ws);
+                            }
+
+                        }
+                        if (resultPayment != null)
+                        {
+                            resultPayment.type = spo.paymentType; //need to create a table with person id and payment type
+                            resultPayment.person_id = resultPerson.id;
+                            resultPayment.billing_address = spo.billingAddress;
+                        }
+                        else
+                        {
+                            PaymentProfile pp = new PaymentProfile()
+                            {
+                                type = spo.paymentType,
+                                person_id = resultPerson.id,
+                                billing_address = spo.billingAddress
+                            };
+                            dbv.PaymentProfiles.Add(pp);
+                        }
+                        try
+                        {
+                            dbv.SaveChanges();
+                            return Ok("Skills Payment Options updated ");
+                        }
+                        catch (Exception e)
+                        {
+                            return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Error: oops! User not registered ");
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest("Error: oops! parameters not valid ");
+            }
+
+        }
+
+        public bool WorkerSkillsDelete(SkillsPaymentOptions spo)
+        {
+            using (var dbv = new HomeInEntities()) {
+
+                var resultPerson = dbv.People.SingleOrDefault(x => x.facebook_id == spo.facebookid);
+
+                if (resultPerson != null) { 
+                    var userSkills = dbv.WorkerSkills.Where(x => x.person_id == resultPerson.id).ToList();
+
+                    if (userSkills != null) {
+
+                        foreach (var us in userSkills)
+                        {
+                            dbv.WorkerSkills.Remove(us);
+                        }
+
+                        dbv.SaveChanges();
+                        return true;
+                    }
+                    else
+                    {
+                        //user skills are null so we need to add them.
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
         /// <summary>
         /// api/People/5

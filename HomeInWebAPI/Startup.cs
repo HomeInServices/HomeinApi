@@ -1,5 +1,6 @@
 ﻿using Owin;
 using HomeInWebAPI.App_Start;
+using System.Web.Http;
 
 namespace HomeInWebAPI
 {
@@ -9,6 +10,10 @@ namespace HomeInWebAPI
         {
             SecurityConfig.Configure(app);
             WebApiConfig.Configure(app);
+            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
+
+
         }
     }
 }

@@ -7,8 +7,10 @@ namespace HomeInWebAPI.Models.Worker
 {
     public class SkillsPaymentOptions
     {
-        public int id { get; set; }
-        public int skill_id { get; set; }
-        public int person_id { get; set; }
+        
+        public string facebookid { get; set; }
+        public List<int> SkillIds { get; set; }
+        public string paymentType { get; set; }
+        public string billingAddress { get; set; }
     }
 }
