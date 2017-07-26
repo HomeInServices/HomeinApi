@@ -208,7 +208,8 @@
     <Compile Include="Common\ChallengeResult.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Controllers\WorkerScheduleController.cs" />
     <Compile Include="Entities\Address.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
@@ -296,6 +297,9 @@
     <Compile Include="Models\PersonModel.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\User\HouseInformation.cs" />
+    <Compile Include="Models\User\PaymentOption.cs" />
+    <Compile Include="Models\User\BasicInformation.cs" />
     <Compile Include="Models\Worker.cs" />
     <Compile Include="Models\Worker\EmployerReferral.cs" />
     <Compile Include="Models\Worker\SkillsPaymentOptions.cs" />

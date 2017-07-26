@@ -14,8 +14,8 @@ using HomeInWebAPI.Models.Worker;
 
 namespace Controllers
 {
-    [RoutePrefix("api/person")]
-    public class PeopleController : BaseController
+    [RoutePrefix("api/worker")]
+    public class WorkerController : BaseController
     {
         private HomeInEntities db = new HomeInEntities();
 
@@ -39,89 +39,8 @@ namespace Controllers
             return Ok(person);
         }
 
-        /*Worker Schedule*/
-        /// <summary>
-        /// Get Schedule of a worker
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [Route("workerSchedule")]
-        [HttpGet]
-        public IHttpActionResult GetPersonSchedule(int id)
-        {
-            var schedule = (from p in db.People
-                            join sch in db.WorkerSchedules on p.id equals sch.worker_id
-                        join r in db.PersonRoles on p.id equals r.person_id
-                        join role in db.Roles on r.role_id equals role.id
-                        where p.id == id
-                        select new
-                        {
-                            Id = p.id,
-                            Name = p.name,
-                            RoleId = r.role_id,
-                            RoleName = role.name,
-                            RoleDescription = role.description,
-                            StartTime = sch.startdate,
-                            EndTiem = sch.enddate
-                        }).ToList();
-
-            return Ok(schedule);
-        }
-
-        /*User Screen - */
-        /// <summary>
-        /// Get worker information based on their skills and last Employer 
-        /// </summary>
-        /// <param name="Workerid"></param>
-        /// <returns></returns>
-        [Route("workerRating")]
-        [HttpGet]
-        public IHttpActionResult GetWorker(int Workerid)
-        {
-            var skills = (from p in db.People
-                          join sw in db.WorkerSkills on p.id equals sw.person_id
-                          join s in db.Skills on sw.skill_id equals s.id
-                          where p.id == Workerid && sw.averageRating > 2 //get avg rating better than 3
-                          select new
-                          {
-                              SkillId = s.id,
-                              Name = p.name,
-                              Skill = s.name,
-                              Rating = sw.averageRating
-
-                          }).ToList();
-
-            var workerInfo = (from p in db.People
-                              where p.id == Workerid
-                                 select new
-                                 {
-                                     Name = p.name,
-                                     WorkerPicture = p.picture
-
-                                 }).FirstOrDefault();
-
-            var lastHired = (from p in db.People
-                             join lh in db.Employers on p.id equals lh.worker_id
-                             join user in db.People on lh.user_id equals user.id
-                             where p.id == Workerid
-                             select new
-                             {
-                                 User = user.name,
-                                 UserPicture = user.picture
-                             }).ToList();
-            var Worker = new
-                                {
-                                    id = Workerid,
-                                    Name = workerInfo.Name,
-                                    Picture = workerInfo.WorkerPicture,
-                                    Skills = skills,
-                                    Employers = lastHired
-                                };
-         
-
-            return Ok(Worker);
-        }
-
+        
+        /*Worker Screen - */
         /// <summary>
         /// Get worker information for prefilling preferences screen
         /// </summary>
@@ -215,6 +134,7 @@ namespace Controllers
                 }
         }
 
+        /*Worker Screen - */
         [Route("workerBasicInformation")]
         [HttpPost]
         public IHttpActionResult PostBasicInformation(BasicInformation bi)
@@ -299,9 +219,10 @@ namespace Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /*Worker Screen - */
         [Route("workerSkillsPaymentOptions")]
         [HttpPost]
-        public IHttpActionResult SkillsPaymentOptions(SkillsPaymentOptions spo)
+        public IHttpActionResult PostSkillsPaymentOptions(SkillsPaymentOptions spo)
         {
             if (spo != null)
             {
@@ -366,6 +287,11 @@ namespace Controllers
 
         }
 
+        /// <summary>
+        /// Support method to delete skills of a person
+        /// </summary>
+        /// <param name="spo"></param>
+        /// <returns></returns>
         public bool WorkerSkillsDelete(SkillsPaymentOptions spo)
         {
             using (var dbv = new HomeInEntities()) {
@@ -395,45 +321,46 @@ namespace Controllers
 
             return false;
         }
+
         /// <summary>
         /// api/People/5
         /// </summary>
         /// <param name="id"></param>
         /// <param name="person"></param>
         /// <returns></returns>
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutPerson(int id, Person person)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[ResponseType(typeof(void))]
+        //public IHttpActionResult PutPerson(int id, Person person)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != person.id)
-            {
-                return BadRequest();
-            }
+        //    if (id != person.id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            db.Entry(person).State = EntityState.Modified;
+        //    db.Entry(person).State = EntityState.Modified;
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!PersonExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
+        //    return StatusCode(HttpStatusCode.NoContent);
+        //}
 
         /// <summary>
         /// 
@@ -441,33 +368,33 @@ namespace Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         // DELETE: api/People/5
-        [ResponseType(typeof(Person))]
-        public IHttpActionResult DeletePerson(int id)
-        {
-            Person person = db.People.Find(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
+        //[ResponseType(typeof(Person))]
+        //public IHttpActionResult DeletePerson(int id)
+        //{
+        //    Person person = db.People.Find(id);
+        //    if (person == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            db.People.Remove(person);
-            db.SaveChanges();
+        //    db.People.Remove(person);
+        //    db.SaveChanges();
 
-            return Ok(person);
-        }
+        //    return Ok(person);
+        //}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
 
-        private bool PersonExists(int id)
-        {
-            return db.People.Count(e => e.id == id) > 0;
-        }
+        //private bool PersonExists(int id)
+        //{
+        //    return db.People.Count(e => e.id == id) > 0;
+        //}
     }
 }
