@@ -10,18 +10,22 @@ namespace HomeInWebAPI.Common
     public class ChallengeResult : IHttpActionResult
     {
         private const string XsrfKey = "XsrfId";
+        private const string personStatus = "personStatus";
 
-        public ChallengeResult(string provider, string redirectUri, HttpRequestMessage request)
-            : this(provider, redirectUri, null, request)
+
+
+        public ChallengeResult(string provider, string redirectUri, HttpRequestMessage request, string status)
+            : this(provider, redirectUri, null, request, status)
         {
         }
 
-        public ChallengeResult(string provider, string redirectUri, string userId, HttpRequestMessage request)
+        public ChallengeResult(string provider, string redirectUri, string userId, HttpRequestMessage request, string status)
         {
             AuthenticationProvider = provider;
             RedirectUri = redirectUri;
             UserId = userId;
             MessageRequest = request;
+            PersonStatus = status;
         }
 
         public string AuthenticationProvider { get; private set; }
@@ -32,12 +36,19 @@ namespace HomeInWebAPI.Common
 
         public HttpRequestMessage MessageRequest { get; private set; }
 
+        public string PersonStatus { get; private set; }
+
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             var properties = new AuthenticationProperties() { RedirectUri = this.RedirectUri };
             if (UserId != null)
             {
                 properties.Dictionary[XsrfKey] = UserId;
+            }
+
+            if(PersonStatus!= null)
+            {
+                properties.Dictionary[personStatus] = PersonStatus;
             }
 
             MessageRequest.GetOwinContext().Authentication.Challenge(properties, AuthenticationProvider);

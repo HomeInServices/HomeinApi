@@ -47,6 +47,18 @@
           <Property Name="comment" Type="varchar" MaxLength="300" />
           <Property Name="commentedOn" Type="date" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmployeeReferral">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="worker_id" Type="int" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="employerReferrel" Type="varchar(max)" />
+          <Property Name="workExperience" Type="varchar" MaxLength="50" />
+          <Property Name="ratecharged" Type="money" />
+          <Property Name="recommendationDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Employer">
           <Key>
             <PropertyRef Name="id" />
@@ -341,6 +353,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_recommendation_user">
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Role="EmployeeReferral" Type="Self.EmployeeReferral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EmployeeReferral">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_recommendation_Worker">
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Role="EmployeeReferral" Type="Self.EmployeeReferral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EmployeeReferral">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Roles_person">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="PersonRole" Type="Self.PersonRole" Multiplicity="*" />
@@ -442,6 +478,7 @@
           <EntitySet Name="AddressInformation" EntityType="Self.AddressInformation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressType" EntityType="Self.AddressType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeReferral" EntityType="Self.EmployeeReferral" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employer" EntityType="Self.Employer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LastHiredBy" EntityType="Self.LastHiredBy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentProfile" EntityType="Self.PaymentProfile" Schema="dbo" store:Type="Tables" />
@@ -510,6 +547,14 @@
           <AssociationSet Name="FK_Rating_worker" Association="Self.FK_Rating_worker">
             <End Role="Person" EntitySet="Person" />
             <End Role="Rating" EntitySet="Rating" />
+          </AssociationSet>
+          <AssociationSet Name="FK_recommendation_user" Association="Self.FK_recommendation_user">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="EmployeeReferral" EntitySet="EmployeeReferral" />
+          </AssociationSet>
+          <AssociationSet Name="FK_recommendation_Worker" Association="Self.FK_recommendation_Worker">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="EmployeeReferral" EntitySet="EmployeeReferral" />
           </AssociationSet>
           <AssociationSet Name="FK_Roles_person" Association="Self.FK_Roles_person">
             <End Role="Person" EntitySet="Person" />
@@ -653,6 +698,15 @@
           <AssociationSet Name="FK_WorkerAvailability_Person" Association="HomeInModel.FK_WorkerAvailability_Person">
             <End Role="Person" EntitySet="People" />
             <End Role="WorkerAvailability" EntitySet="WorkerAvailabilities" />
+          </AssociationSet>
+          <EntitySet Name="EmployeeReferrals" EntityType="HomeInModel.EmployeeReferral" />
+          <AssociationSet Name="FK_recommendation_user" Association="HomeInModel.FK_recommendation_user">
+            <End Role="Person" EntitySet="People" />
+            <End Role="EmployeeReferral" EntitySet="EmployeeReferrals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_recommendation_Worker" Association="HomeInModel.FK_recommendation_Worker">
+            <End Role="Person" EntitySet="People" />
+            <End Role="EmployeeReferral" EntitySet="EmployeeReferrals" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Address">
@@ -914,6 +968,8 @@
           <NavigationProperty Name="Transactions" Relationship="HomeInModel.FK_Transaction_user" FromRole="Person" ToRole="Transaction" />
           <NavigationProperty Name="Transactions1" Relationship="HomeInModel.FK_Transaction_worker" FromRole="Person" ToRole="Transaction" />
           <NavigationProperty Name="WorkerAvailabilities" Relationship="HomeInModel.FK_WorkerAvailability_Person" FromRole="Person" ToRole="WorkerAvailability" />
+          <NavigationProperty Name="EmployeeReferrals" Relationship="HomeInModel.FK_recommendation_user" FromRole="Person" ToRole="EmployeeReferral" />
+          <NavigationProperty Name="EmployeeReferrals1" Relationship="HomeInModel.FK_recommendation_Worker" FromRole="Person" ToRole="EmployeeReferral" />
         </EntityType>
         <Association Name="FK_Address_Person">
           <End Type="HomeInModel.Person" Role="Person" Multiplicity="1" />
@@ -1131,6 +1187,44 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="EmployeeReferral">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="worker_id" Type="Int32" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="employerReferrel" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="workExperience" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ratecharged" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="recommendationDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Person" Relationship="HomeInModel.FK_recommendation_user" FromRole="EmployeeReferral" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="HomeInModel.FK_recommendation_Worker" FromRole="EmployeeReferral" ToRole="Person" />
+        </EntityType>
+        <Association Name="FK_recommendation_user">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="HomeInModel.EmployeeReferral" Role="EmployeeReferral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EmployeeReferral">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_recommendation_Worker">
+          <End Type="HomeInModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="HomeInModel.EmployeeReferral" Role="EmployeeReferral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EmployeeReferral">
+              <PropertyRef Name="worker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1318,6 +1412,19 @@
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="facebook_id" ColumnName="facebook_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeReferrals">
+            <EntityTypeMapping TypeName="HomeInModel.EmployeeReferral">
+              <MappingFragment StoreEntitySet="EmployeeReferral">
+                <ScalarProperty Name="recommendationDate" ColumnName="recommendationDate" />
+                <ScalarProperty Name="ratecharged" ColumnName="ratecharged" />
+                <ScalarProperty Name="workExperience" ColumnName="workExperience" />
+                <ScalarProperty Name="employerReferrel" ColumnName="employerReferrel" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="worker_id" ColumnName="worker_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -18,7 +18,7 @@ namespace Controllers
         /// REgister a user if not present.
         /// </summary>
         /// <returns></returns>
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string status)
         {
             if(User.Identity.IsAuthenticated)
             {
@@ -36,7 +36,9 @@ namespace Controllers
                     isAuthenticated = user.Identity.IsAuthenticated,
                     accessToken = claims.FirstOrDefault(x => x.Type == "access_token").Value,
                     picture = claims.FirstOrDefault(x => x.Type == "picture").Value,
-                    gender = claims.FirstOrDefault(x => x.Type == "gender").Value
+                    gender = claims.FirstOrDefault(x => x.Type == "gender").Value,
+                    personStatus = status
+                    
                 };
 
                 //var fbClient = new FacebookHttpConnect();
@@ -50,7 +52,25 @@ namespace Controllers
                     
                     if(person != null)
                     {
-                        return Ok(person);
+                        var role = context.PersonRoles.FirstOrDefault(x => x.person_id == person.id);
+                        var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
+                        if(role != null)
+                        {
+                            return Ok("role: " + roleName.name + "person: " + person.name);
+                        }
+                        else
+                        {
+                            var roleId = context.Roles.FirstOrDefault(x => x.name == userProfile.personStatus);
+                            context.PersonRoles.Add(new PersonRole
+                            {
+                                role_id = roleId.id,
+                                person_id = person.id
+                            });
+
+                            context.SaveChanges();
+                            return Ok("role added: "+ roleId.name + "person: "+ person.name);
+                        }
+                        
                     }
                     else
                     {
@@ -66,6 +86,17 @@ namespace Controllers
                      );
                         context.SaveChanges();
 
+                        var personnew = context.People.FirstOrDefault(x => x.facebook_id == userProfile.facebookId);
+                        var roleId = context.Roles.FirstOrDefault(x => x.name == userProfile.personStatus);
+                        if (personnew != null) { 
+                            context.PersonRoles.Add(new PersonRole
+                            {
+                                role_id = roleId.id,
+                                person_id = personnew.id
+                            });
+                            context.SaveChanges();
+                            return Ok("role added: " + roleId.name + "person: " + personnew.name);
+                        }
                         return Ok("User Added: " + userProfile);
                     }
                 }    

@@ -42,5 +42,6 @@ namespace HomeInWebAPI.Entities
         public virtual DbSet<WorkerSchedule> WorkerSchedules { get; set; }
         public virtual DbSet<WorkerSkill> WorkerSkills { get; set; }
         public virtual DbSet<Person> People { get; set; }
+        public virtual DbSet<EmployeeReferral> EmployeeReferrals { get; set; }
     }
 }

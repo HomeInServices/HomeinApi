@@ -44,6 +44,9 @@
         <AssociationConnector Association="HomeInModel.FK_Transaction_user" />
         <AssociationConnector Association="HomeInModel.FK_Transaction_worker" />
         <AssociationConnector Association="HomeInModel.FK_WorkerAvailability_Person" />
+        <EntityTypeShape EntityType="HomeInModel.EmployeeReferral" Width="1.5" PointX="23.375" PointY="48" />
+        <AssociationConnector Association="HomeInModel.FK_recommendation_user" />
+        <AssociationConnector Association="HomeInModel.FK_recommendation_Worker" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -35,6 +35,8 @@ namespace HomeInWebAPI.Entities
             this.Transactions = new HashSet<Transaction>();
             this.Transactions1 = new HashSet<Transaction>();
             this.WorkerAvailabilities = new HashSet<WorkerAvailability>();
+            this.EmployeeReferrals = new HashSet<EmployeeReferral>();
+            this.EmployeeReferrals1 = new HashSet<EmployeeReferral>();
         }
     
         public int id { get; set; }
@@ -81,5 +83,9 @@ namespace HomeInWebAPI.Entities
         public virtual ICollection<Transaction> Transactions1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkerAvailability> WorkerAvailabilities { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmployeeReferral> EmployeeReferrals { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmployeeReferral> EmployeeReferrals1 { get; set; }
     }
 }

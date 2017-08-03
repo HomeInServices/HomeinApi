@@ -6,11 +6,12 @@ namespace Controllers
     [RoutePrefix("api/login")]
     public class LoginController : ApiController
     {
-        [Route("exlogin")]
+        [Route("exlogin/{status}")]
         [HttpGet]
-        public IHttpActionResult ExternalLogin()
+        public IHttpActionResult ExternalLogin(string status)
         {
-            return new ChallengeResult("Facebook", "/api/home", this.Request);
+            var url = "/api/home/" + status;
+            return new ChallengeResult("Facebook", url, this.Request, status);
         }
 
         //[Route("exlogout")]
