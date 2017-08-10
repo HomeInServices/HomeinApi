@@ -9,7 +9,7 @@ namespace HomeInWebAPI.Services
 {
     public interface IFacebookService
     {
-        Task<PersonModel> GetAccountAsync(string accessToken);
+        Task<RegistrationModel> GetAccountAsync(string accessToken);
         //Task PostOnWallAsync(string accessToken, string message);
         Task<dynamic> GetFriendListAsync(string accessToken);
     }
@@ -23,7 +23,7 @@ namespace HomeInWebAPI.Services
             _facebookClient = facebookClient;
         }
 
-        public async Task<PersonModel> GetAccountAsync(string accessToken)
+        public async Task<RegistrationModel> GetAccountAsync(string accessToken)
         {
             var result = await _facebookClient.GetAsync<dynamic>(
                 accessToken, "me", "fields=id,name,email,gender,picture");
@@ -31,18 +31,17 @@ namespace HomeInWebAPI.Services
             if (result == null)
             {
                 //Error
-                return new PersonModel();
+                return new RegistrationModel();
             }
 
-            var person = new PersonModel
+            var person = new RegistrationModel
             {
                 Id = result.id,
                 Email = result.email,
                 Name = result.name,
                 Gender = result.gender,
                 //Picture = result.picture
-                Picture = ""
-
+                Picture = result.picture.data.url
             };
 
             return person;

@@ -19,6 +19,7 @@ namespace HomeInWebAPI.Common
         {
         }
 
+
         public ChallengeResult(string provider, string redirectUri, string userId, HttpRequestMessage request, string status)
         {
             AuthenticationProvider = provider;

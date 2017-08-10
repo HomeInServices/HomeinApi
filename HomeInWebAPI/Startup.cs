@@ -1,5 +1,5 @@
 ﻿using Owin;
-using HomeInWebAPI.App_Start;
+//using HomeInWebAPI.App_Start;
 using System.Web.Http;
 
 namespace HomeInWebAPI
@@ -8,7 +8,7 @@ namespace HomeInWebAPI
     {
         public void Configuration(IAppBuilder app)
         {
-            SecurityConfig.Configure(app);
+            //SecurityConfig.Configure(app);
             WebApiConfig.Configure(app);
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
             json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;

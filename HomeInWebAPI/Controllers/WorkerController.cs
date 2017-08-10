@@ -139,78 +139,108 @@ namespace Controllers
         [HttpPost]
         public IHttpActionResult PostBasicInformation(BasicInformation bi)
         {
+            Boolean isWorker = false;
+
             if(bi != null) { 
                 using (var dbv = new HomeInEntities())
                 {
                     
                     var resultPerson = dbv.People.FirstOrDefault(x => x.facebook_id == bi.facebookid);
-
-                    if (resultPerson != null)
-                    { 
-                        var resultAddress = dbv.Addresses.FirstOrDefault(x => x.person_id == resultPerson.id);
-                        var resultMWD = dbv.WorkerAvailabilities.FirstOrDefault(x => x.worker_Id == resultPerson.id);
-
-                        if (resultAddress != null && resultMWD != null)
+                    
+                        if (resultPerson != null)
                         {
-                            resultPerson.phone = bi.phone;
-
-                            resultAddress.street = bi.street;
-                            resultAddress.city = bi.city;
-                            resultAddress.state = bi.state;
-                            resultAddress.country = bi.country;
-                            resultAddress.zipcode = bi.zipcode;
-
-                            resultMWD.MilesWantToDrive = bi.MilesWantToDrive;
-                            try
-                            { 
-                                dbv.SaveChanges();
-                                return Ok("Basic Information updated ");
-                            }
-                            catch(Exception e)
+                            var isPersonType = (from p in dbv.People
+                                                join pr in dbv.PersonRoles on p.id equals pr.person_id
+                                                join r in dbv.Roles on pr.role_id equals resultPerson.id
+                                                where p.id == resultPerson.id
+                                                select new
+                                                {
+                                                    personType = r.name
+                                                }).FirstOrDefault();
+                            if (isPersonType != null)
                             {
-                                return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                                if (isPersonType.personType.ToLower() == "worker")
+                                {
+                                    isWorker = true;
+                                }
+
                             }
 
-                        }
-                        else
-                        {
-                            Address ad = new Address()
+                            if (isWorker)
                             {
-                                person_id = resultPerson.id,
-                                type_id = 1,
-                                street = bi.street,
-                                city = bi.city,
-                                state = bi.state,
-                                country = bi.country,
-                                zipcode = bi.zipcode
-                            };
-                            dbv.Addresses.Add(ad);
+                                var resultAddress = dbv.Addresses.FirstOrDefault(x => x.person_id == resultPerson.id);
+                                var resultMWD = dbv.WorkerAvailabilities.FirstOrDefault(x => x.worker_Id == resultPerson.id);
 
-                            WorkerAvailability wa = new WorkerAvailability()
+                                if (resultAddress != null && resultMWD != null)
+                                {
+                                    resultPerson.phone = bi.phone;
+
+                                    resultAddress.street = bi.street;
+                                    resultAddress.city = bi.city;
+                                    resultAddress.state = bi.state;
+                                    resultAddress.country = bi.country;
+                                    resultAddress.zipcode = bi.zipcode;
+
+                                    resultMWD.MilesWantToDrive = bi.MilesWantToDrive;
+                                    try
+                                    {
+                                        dbv.SaveChanges();
+                                        return Ok("Basic Information updated ");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                                    }
+
+                                }
+                                else
+                                {
+                                    Address ad = new Address()
+                                    {
+                                        person_id = resultPerson.id,
+                                        type_id = 1,
+                                        street = bi.street,
+                                        city = bi.city,
+                                        state = bi.state,
+                                        country = bi.country,
+                                        zipcode = bi.zipcode
+                                    };
+                                    dbv.Addresses.Add(ad);
+
+                                    WorkerAvailability wa = new WorkerAvailability()
+                                    {
+                                        worker_Id = resultPerson.id,
+                                        MilesWantToDrive = bi.MilesWantToDrive,
+                                        DaysAvailable = ""
+                                    };
+                                    dbv.WorkerAvailabilities.Add(wa);
+
+                                    resultPerson.phone = bi.phone;
+                                }
+                                try
+                                {
+                                    dbv.SaveChanges();
+                                    return Ok("Basic Information updated ");
+                                }
+                                catch (Exception e)
+                                {
+                                    return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                                }
+                            }
+                            else
                             {
-                                worker_Id = resultPerson.id,
-                                MilesWantToDrive = bi.MilesWantToDrive,
-                                DaysAvailable = ""
-                            };
-                            dbv.WorkerAvailabilities.Add(wa);
-
-                            resultPerson.phone = bi.phone;
+                                //user is not worker
+                                return BadRequest("Error: Request cannot be completed at this time");
+                            }
                         }
-                        try
-                        {
-                            dbv.SaveChanges();
-                            return Ok("Basic Information updated ");
-                        }
-                        catch (Exception e)
-                        {
-                            return BadRequest("Error: oops! Something went wrong: " + e.Message);
-                        }
-                    }
                     else
                     {
+                        
                         return BadRequest("Error: Request cannot be completed at this time. Please register with the application");
+
+
                     }
-                 }
+                }
             }
             else
             {

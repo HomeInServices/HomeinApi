@@ -1,6 +1,7 @@
 ﻿using Owin;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace HomeInWebAPI
 {
@@ -10,6 +11,7 @@ namespace HomeInWebAPI
         {
             HttpConfiguration config = new HttpConfiguration();
 
+            config.EnableCors();
             // Web API routes
             config.MapHttpAttributeRoutes();
 

@@ -5,9 +5,9 @@ using System.Web;
 
 namespace HomeInWebAPI.Models
 {
-    public class PersonModel
+    public class RegistrationModel
     {
-        public PersonModel()
+        public RegistrationModel()
         {
             Id = "";
             Name = "";

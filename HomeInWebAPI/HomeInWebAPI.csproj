@@ -156,6 +156,10 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -165,6 +169,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
       <Private>True</Private>
@@ -298,13 +306,10 @@
     <Compile Include="Entities\WorkerSkill.cs">
       <DependentUpon>HomeIn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PersonModel.cs" />
-    <Compile Include="Models\Transaction.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\User\HouseInformation.cs" />
     <Compile Include="Models\User\PaymentOption.cs" />
     <Compile Include="Models\User\BasicInformation.cs" />
-    <Compile Include="Models\Worker.cs" />
     <Compile Include="Models\Recommendation\EmployerReferral.cs" />
     <Compile Include="Models\Worker\SkillsPaymentOptions.cs" />
     <Compile Include="Models\Worker\BasicInformation.cs" />
