@@ -54,14 +54,14 @@ namespace HomeInWebAPI.Controllers
         /// <returns></returns>
         [Route("workerRating")]
         [HttpGet]
-        public IHttpActionResult GetWorker(int Workerid)
+        public IHttpActionResult GetWorker(int workerid)
         {
             using (var db = new HomeInEntities())
             {
                 var skills = (from p in db.People
                               join sw in db.WorkerSkills on p.id equals sw.person_id
                               join s in db.Skills on sw.skill_id equals s.id
-                              where p.id == Workerid && sw.averageRating > 2 //get avg rating better than 3
+                              where p.id == workerid && sw.averageRating > 2 //get avg rating better than 3
                               select new
                               {
                                   SkillId = s.id,
@@ -72,7 +72,7 @@ namespace HomeInWebAPI.Controllers
                               }).ToList();
 
                 var workerInfo = (from p in db.People
-                                  where p.id == Workerid
+                                  where p.id == workerid
                                   select new
                                   {
                                       Name = p.name,
@@ -83,7 +83,7 @@ namespace HomeInWebAPI.Controllers
                 var lastHired = (from p in db.People
                                  join lh in db.Employers on p.id equals lh.worker_id
                                  join user in db.People on lh.user_id equals user.id
-                                 where p.id == Workerid
+                                 where p.id == workerid
                                  select new
                                  {
                                      User = user.name,
@@ -91,7 +91,7 @@ namespace HomeInWebAPI.Controllers
                                  }).ToList();
                 var Worker = new
                 {
-                    id = Workerid,
+                    id = workerid,
                     Name = workerInfo.Name,
                     Picture = workerInfo.WorkerPicture,
                     Skills = skills,

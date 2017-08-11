@@ -110,84 +110,84 @@ namespace Controllers
         //    }
         //}
 
-        
+
         [Route("reg")]
         [HttpGet]
         public async Task<IHttpActionResult> GetUser(string loc, string aT, string fId)
         {
 
+            var fbClient = new FacebookHttpConnect();
+            var fbService = new FacebookService(fbClient);
+            var getFriendList = await fbService.GetFriendListAsync(aT);
+            var getData = await fbService.GetAccountAsync(aT);
+
+            if (getData != null)
+            { 
+            using (HomeInEntities context = new HomeInEntities())
             {
+                Person person = context.People.FirstOrDefault(x => x.facebook_id == fId);
 
-                var fbClient = new FacebookHttpConnect();
-                var fbService = new FacebookService(fbClient);
-                var getFriendList = await fbService.GetFriendListAsync(aT);
-                var getData = await fbService.GetAccountAsync(aT);
+                if (person != null)
+                {
+                    var role = context.PersonRoles.FirstOrDefault(x => x.person_id == person.id);
+                    var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
+                    if (role != null)
+                    {
+                        return Ok("role: " + roleName.name + "person: " + person.name);
+                    }
+                    else
+                    {
+                        var roleId = context.Roles.FirstOrDefault(x => x.name == loc);
+                        context.PersonRoles.Add(new PersonRole
+                        {
+                            role_id = roleId.id,
+                            person_id = person.id
+                        });
 
-                //    using (HomeInEntities context = new HomeInEntities())
-                //    {
-                //        Person person = context.People.FirstOrDefault(x => x.facebook_id == fId);
+                        context.SaveChanges();
+                        return Ok("role added: " + roleId.name + "person: " + person.name);
+                    }
 
-                //        if (person != null)
-                //        {
-                //            var role = context.PersonRoles.FirstOrDefault(x => x.person_id == person.id);
-                //            var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
-                //            if (role != null)
-                //            {
-                //                return Ok("role: " + roleName.name + "person: " + person.name);
-                //            }
-                //            else
-                //            {
-                //                var roleId = context.Roles.FirstOrDefault(x => x.name == loc);
-                //                context.PersonRoles.Add(new PersonRole
-                //                {
-                //                    role_id = roleId.id,
-                //                    person_id = person.id
-                //                });
+                }
+                else
+                {
+                    context.People.Add(new Person
 
-                //                context.SaveChanges();
-                //                return Ok("role added: " + roleId.name + "person: " + person.name);
-                //            }
+                    {
+                        facebook_id = fId,
+                        name = getData.Name,
+                        picture = getData.Picture,
+                        email = getData.Email,
+                        gender = getData.Gender
+                    }
+                 );
+                    context.SaveChanges();
 
-                //        }
-                //        else
-                //        {
-                //            context.People.Add(new Person
+                    var personnew = context.People.FirstOrDefault(x => x.facebook_id == fId);
+                    var roleId = context.Roles.FirstOrDefault(x => x.name == loc);
+                    if (personnew != null)
+                    {
+                        context.PersonRoles.Add(new PersonRole
+                        {
+                            role_id = roleId.id,
+                            person_id = personnew.id
+                        });
+                        context.SaveChanges();
+                        return Ok("role added: " + roleId.name + "person: " + personnew.name);
+                    }
 
-                //            {
-                //                facebook_id = userProfile.facebookId,
-                //                name = userProfile.name,
-                //                picture = userProfile.picture,
-                //                email = userProfile.email,
-                //                gender = userProfile.gender
-                //            }
-                //         );
-                //            context.SaveChanges();
+                    else
+                    {
+                        return BadRequest("Authentication Failed. Please contact customer service");
+                    }
+                }
 
-                //            var personnew = context.People.FirstOrDefault(x => x.facebook_id == userProfile.facebookId);
-                //            var roleId = context.Roles.FirstOrDefault(x => x.name == userProfile.personStatus);
-                //            if (personnew != null)
-                //            {
-                //                context.PersonRoles.Add(new PersonRole
-                //                {
-                //                    role_id = roleId.id,
-                //                    person_id = personnew.id
-                //                });
-                //                context.SaveChanges();
-                //                return Ok("role added: " + roleId.name + "person: " + personnew.name);
-                //            }
-                //            return Ok("User Added: " + userProfile);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    return BadRequest("Authentication Failed. Please contact customer service");
-                //}
-
-                return Ok(getData);
+            }
+          }
+            else
+            {
+                return BadRequest("Authentication Failed. Please contact customer service");
             }
         }
-
-
     }
 }
