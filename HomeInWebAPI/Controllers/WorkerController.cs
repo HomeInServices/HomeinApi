@@ -11,9 +11,11 @@ using System.Web.Http.Description;
 using HomeInWebAPI;
 using HomeInWebAPI.Entities;
 using HomeInWebAPI.Models.Worker;
+using System.Web.Http.Cors;
 
 namespace Controllers
 {
+    //[EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("api/worker")]
     public class WorkerController : BaseController
     {
@@ -352,6 +354,101 @@ namespace Controllers
             return false;
         }
 
+        /*Worker Screen - */
+        [Route("workerEmployerInformation")]
+        [HttpPost]
+        public IHttpActionResult PostLastEmployerInformation(WorkerEmployerInformation wi)
+        {
+            Boolean isWorker = false;
+
+            if (wi != null)
+            {
+                using (var dbv = new HomeInEntities())
+                {
+
+                    var resultPerson = dbv.People.FirstOrDefault(x => x.facebook_id == wi.facebookid);
+
+                    if (resultPerson != null)
+                    {
+                        var isPersonType = (from p in dbv.People
+                                            join pr in dbv.PersonRoles on p.id equals pr.person_id
+                                            join r in dbv.Roles on pr.role_id equals resultPerson.id
+                                            where p.id == resultPerson.id
+                                            select new
+                                            {
+                                                personType = r.name
+                                            }).FirstOrDefault();
+                        if (isPersonType != null)
+                        {
+                            if (isPersonType.personType.ToLower() == "worker")
+                            {
+                                isWorker = true;
+                            }
+
+                        }
+
+                        if (isWorker)
+                        {
+                            var resultMWD = dbv.WorkerAvailabilities.FirstOrDefault(x => x.worker_Id == resultPerson.id);
+
+                            if (resultMWD != null)
+                            {
+                                resultPerson.phone = wi.phone;
+                                resultMWD.DaysAvailable = wi.availability;
+                                try
+                                {
+                                    dbv.SaveChanges();
+                                    return Ok("Last Hired by Information updated ");
+                                }
+                                catch (Exception e)
+                                {
+                                    return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                                }
+
+                            }
+                            else
+                            {
+                                WorkerAvailability wa = new WorkerAvailability()
+                                {
+                                    worker_Id = resultPerson.id,
+                                    MilesWantToDrive = 0,
+                                    DaysAvailable = wi.availability
+                                };
+                                dbv.WorkerAvailabilities.Add(wa);
+
+                                resultPerson.phone = wi.phone;
+                            }
+                            try
+                            {
+                                dbv.SaveChanges();
+                                return Ok("Last Hired by Information updated ");
+                            }
+                            catch (Exception e)
+                            {
+                                return BadRequest("Error: oops! Something went wrong: " + e.Message);
+                            }
+                        }
+                        else
+                        {
+                            //user is not worker
+                            return BadRequest("Error: Request cannot be completed at this time");
+                        }
+                    }
+                    else
+                    {
+
+                        return BadRequest("Error: Request cannot be completed at this time. Please register with the application");
+
+
+                    }
+                }
+            }
+            else
+            {
+                BadRequest("Error: Basic information is invalid, please review.");
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
         /// <summary>
         /// api/People/5
         /// </summary>

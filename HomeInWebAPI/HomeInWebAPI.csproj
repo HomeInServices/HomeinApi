@@ -311,6 +311,7 @@
     <Compile Include="Models\User\PaymentOption.cs" />
     <Compile Include="Models\User\BasicInformation.cs" />
     <Compile Include="Models\Recommendation\EmployerReferral.cs" />
+    <Compile Include="Models\Worker\WorkerEmployerInfo.cs" />
     <Compile Include="Models\Worker\SkillsPaymentOptions.cs" />
     <Compile Include="Models\Worker\BasicInformation.cs" />
     <Compile Include="Models\Worker\WorkerSchedule.cs" />

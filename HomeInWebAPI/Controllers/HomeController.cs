@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    //[EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("api/home")]
     public class HomeController : BaseController
     {
@@ -133,7 +133,16 @@ namespace Controllers
                     var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
                     if (role != null)
                     {
-                        return Ok("role: " + roleName.name + "person: " + person.name);
+                            var response =
+                                        new
+                                        {
+                                            role = roleName.name,
+                                            facebookId = person.facebook_id,
+                                            sysId = person.id
+
+                                        };
+                            //return Ok("role: " + roleName.name + " person: " + person.name);
+                            return Ok(response);
                     }
                     else
                     {
@@ -145,8 +154,18 @@ namespace Controllers
                         });
 
                         context.SaveChanges();
-                        return Ok("role added: " + roleId.name + "person: " + person.name);
-                    }
+                            //return Ok("role added: " + roleId.name + " person: " + person.name);
+                            var response =
+                                            new
+                                            {
+                                                role = roleId.name,
+                                                facebookId = person.facebook_id,
+                                                sysId = person.id
+
+                                            };
+                            //return Ok("role: " + roleName.name + " person: " + person.name);
+                            return Ok(response);
+                        }
 
                 }
                 else
@@ -173,8 +192,18 @@ namespace Controllers
                             person_id = personnew.id
                         });
                         context.SaveChanges();
-                        return Ok("role added: " + roleId.name + "person: " + personnew.name);
-                    }
+                            //return Ok("role added: " + roleId.name + " person: " + personnew.name);
+                            var response =
+                                            new
+                                            {
+                                                role = roleId.name,
+                                                facebookId = personnew.facebook_id,
+                                                sysId = personnew.id
+
+                                            };
+                            //return Ok("role: " + roleName.name + " person: " + person.name);
+                            return Ok(response);
+                        }
 
                     else
                     {

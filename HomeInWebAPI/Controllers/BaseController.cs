@@ -9,7 +9,7 @@ using System.Web.Http.Cors;
 namespace Controllers
 {
     //[Authorize]
-    //[EnableCors(origins: "*", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class BaseController : ApiController
     {
     }
