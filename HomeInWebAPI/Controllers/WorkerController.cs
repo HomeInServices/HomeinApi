@@ -61,6 +61,7 @@ namespace Controllers
                                   select new
                                   {
                                       Name = p.name,
+                                      skillId = s.id,
                                       Skill = s.name,
                                       Rating = sw.averageRating
 
@@ -72,9 +73,10 @@ namespace Controllers
                                                   {
 
                                                    Street = a.street,
+                                                   City = a.city,
                                                    State = a.state,
                                                    Zipcode = a.zipcode,
-                                                   Address = a.street + "," + a.state + "," + a.zipcode
+                                                   Address = a.street + ","+ a.city + "," + a.state + "," + a.zipcode
 
                                                    }).ToList();
 
@@ -120,6 +122,7 @@ namespace Controllers
                                     {
                                         id = workerId,
                                         Name = workerInfo.Name,
+                                        Phone = workerInfo.Phone,
                                         Skills = skills,
                                         Address = addressList,
                                         Payment = paymentInfo,
@@ -390,10 +393,14 @@ namespace Controllers
                         if (isWorker)
                         {
                             var resultMWD = dbv.WorkerAvailabilities.FirstOrDefault(x => x.worker_Id == resultPerson.id);
+                            var resultLHB = dbv.LastHiredBies.FirstOrDefault(x => x.worker_Id == resultPerson.id);
 
-                            if (resultMWD != null)
+                            if (resultMWD != null && resultLHB !=null)
                             {
-                                resultPerson.phone = wi.phone;
+                                resultLHB.user_email = wi.email;
+                                resultLHB.user_name = wi.name;
+                                resultLHB.user_phone = decimal.Parse(wi.phone);
+
                                 resultMWD.DaysAvailable = wi.availability;
                                 try
                                 {
@@ -416,12 +423,19 @@ namespace Controllers
                                 };
                                 dbv.WorkerAvailabilities.Add(wa);
 
-                                resultPerson.phone = wi.phone;
+                                LastHiredBy lhb = new LastHiredBy()
+                                {
+                                    worker_Id = resultPerson.id,
+                                    user_name = wi.name,
+                                    user_phone = decimal.Parse(wi.phone),
+                                    user_email = wi.email
+                                };
+                                dbv.LastHiredBies.Add(lhb);
                             }
                             try
                             {
                                 dbv.SaveChanges();
-                                return Ok("Last Hired by Information updated ");
+                                return Ok("Last Hired by Information created");
                             }
                             catch (Exception e)
                             {
