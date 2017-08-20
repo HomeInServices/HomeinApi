@@ -42,11 +42,12 @@ namespace HomeInWebAPI.Controllers
                                                     RateCharged = item.ratecharged,
                                                     UserId = item.user_id,
                                                     WorkerId = item.worker_id
-                                                    
+
                                                 }).ToList();
                         var Ratings = (from item in dbv.Ratings
                                        where item.user_id == resultPerson.id && item.worker_id == er.worker_id
-                                       select new {
+                                       select new
+                                       {
 
                                            SkillId = item.skill_id,
                                            Rating = item.rating1,
@@ -63,8 +64,8 @@ namespace HomeInWebAPI.Controllers
                         {
                             return Ok("Ratings already submitted!");
                         }
-                        
-                        if(EmployeeReferral.Count() <= 0 && Ratings.Count() <=0)
+
+                        if (EmployeeReferral.Count() <= 0 && Ratings.Count() <= 0)
                         {
                             EmployeeReferral erworker = new EmployeeReferral()
                             {
@@ -77,10 +78,10 @@ namespace HomeInWebAPI.Controllers
 
                             };
                             dbv.EmployeeReferrals.Add(erworker);
-                            
+
                             var a = er.SkillIds.Keys.ToList();
 
-                            foreach(var key in a)
+                            foreach (var key in a)
                             {
                                 Rating r = new Rating()
                                 {

@@ -275,7 +275,7 @@ namespace Controllers
                             {
                                 WorkerSkill ws = new WorkerSkill()
                                 {
-                                    skill_id = skillId,
+                                    skill_id = skillId.skillId,
                                     person_id = resultPerson.id,
                                     averageRating = null
                                 };
@@ -287,7 +287,7 @@ namespace Controllers
                         {
                             resultPayment.type = spo.paymentType; //need to create a table with person id and payment type
                             resultPayment.person_id = resultPerson.id;
-                            resultPayment.billing_address = spo.billingAddress;
+                            //resultPayment.billing_address = spo.billingAddress;
                         }
                         else
                         {
@@ -295,7 +295,7 @@ namespace Controllers
                             {
                                 type = spo.paymentType,
                                 person_id = resultPerson.id,
-                                billing_address = spo.billingAddress
+                                //billing_address = spo.billingAddress
                             };
                             dbv.PaymentProfiles.Add(pp);
                         }
@@ -317,7 +317,7 @@ namespace Controllers
             }
             else
             {
-                return BadRequest("Error: oops! parameters not valid ");
+                return BadRequest("Error: oops! parameters are not valid ");
             }
 
         }

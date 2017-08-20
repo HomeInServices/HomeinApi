@@ -9,8 +9,7 @@ namespace HomeInWebAPI.Models.Worker
     {
         
         public string facebookid { get; set; }
-        public List<int> SkillIds { get; set; }
+        public List<dynamic> SkillIds { get; set; }
         public string paymentType { get; set; }
-        public string billingAddress { get; set; }
     }
 }

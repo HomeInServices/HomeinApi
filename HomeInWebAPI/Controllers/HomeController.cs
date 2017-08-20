@@ -110,7 +110,7 @@ namespace Controllers
         //    }
         //}
 
-
+        
         [Route("reg")]
         [HttpGet]
         public async Task<IHttpActionResult> GetUser(string loc, string aT, string fId)
@@ -118,21 +118,21 @@ namespace Controllers
 
             var fbClient = new FacebookHttpConnect();
             var fbService = new FacebookService(fbClient);
-            var getFriendList = await fbService.GetFriendListAsync(aT);
+            //var getFriendList = await fbService.GetFriendListAsync(aT);
             var getData = await fbService.GetAccountAsync(aT);
 
             if (getData != null)
-            { 
-            using (HomeInEntities context = new HomeInEntities())
             {
-                Person person = context.People.FirstOrDefault(x => x.facebook_id == fId);
-
-                if (person != null)
+                using (HomeInEntities context = new HomeInEntities())
                 {
-                    var role = context.PersonRoles.FirstOrDefault(x => x.person_id == person.id);
-                    var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
-                    if (role != null)
+                    Person person = context.People.FirstOrDefault(x => x.facebook_id == fId);
+
+                    if (person != null)
                     {
+                        var role = context.PersonRoles.FirstOrDefault(x => x.person_id == person.id);
+                        var roleName = context.Roles.FirstOrDefault(x => x.id == role.role_id);
+                        if (role != null)
+                        {
                             var response =
                                         new
                                         {
@@ -143,17 +143,17 @@ namespace Controllers
                                         };
                             //return Ok("role: " + roleName.name + " person: " + person.name);
                             return Ok(response);
-                    }
-                    else
-                    {
-                        var roleId = context.Roles.FirstOrDefault(x => x.name == loc);
-                        context.PersonRoles.Add(new PersonRole
+                        }
+                        else
                         {
-                            role_id = roleId.id,
-                            person_id = person.id
-                        });
+                            var roleId = context.Roles.FirstOrDefault(x => x.name == loc.ToLower());
+                            context.PersonRoles.Add(new PersonRole
+                            {
+                                role_id = roleId.id,
+                                person_id = person.id
+                            });
 
-                        context.SaveChanges();
+                            context.SaveChanges();
                             //return Ok("role added: " + roleId.name + " person: " + person.name);
                             var response =
                                             new
@@ -167,31 +167,31 @@ namespace Controllers
                             return Ok(response);
                         }
 
-                }
-                else
-                {
-                    context.People.Add(new Person
-
-                    {
-                        facebook_id = fId,
-                        name = getData.Name,
-                        picture = getData.Picture,
-                        email = getData.Email,
-                        gender = getData.Gender
                     }
-                 );
-                    context.SaveChanges();
-
-                    var personnew = context.People.FirstOrDefault(x => x.facebook_id == fId);
-                    var roleId = context.Roles.FirstOrDefault(x => x.name == loc);
-                    if (personnew != null)
+                    else
                     {
-                        context.PersonRoles.Add(new PersonRole
+                        context.People.Add(new Person
+
                         {
-                            role_id = roleId.id,
-                            person_id = personnew.id
+                            facebook_id = fId,
+                            name = getData.Name,
+                            picture = getData.Picture,
+                            email = getData.Email,
+                            gender = getData.Gender
                         });
+
                         context.SaveChanges();
+
+                        var personnew = context.People.FirstOrDefault(x => x.facebook_id == fId);
+                        var roleId = context.Roles.FirstOrDefault(x => x.name == loc.ToLower());
+                        if (personnew != null)
+                        {
+                            context.PersonRoles.Add(new PersonRole
+                            {
+                                role_id = roleId.id,
+                                person_id = personnew.id
+                            });
+                            context.SaveChanges();
                             //return Ok("role added: " + roleId.name + " person: " + personnew.name);
                             var response =
                                             new
@@ -204,15 +204,14 @@ namespace Controllers
                             //return Ok("role: " + roleName.name + " person: " + person.name);
                             return Ok(response);
                         }
-
-                    else
-                    {
-                        return BadRequest("Authentication Failed. Please contact customer service");
+                        else
+                        {
+                            return BadRequest("Authentication Failed. Please contact customer service");
+                        }
                     }
-                }
 
+                }
             }
-          }
             else
             {
                 return BadRequest("Authentication Failed. Please contact customer service");
